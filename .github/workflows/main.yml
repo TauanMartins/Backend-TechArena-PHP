@@ -15,14 +15,14 @@ jobs:
     - name: Prepare .env file
       run: |
         cp .env.example .env
-        echo APP_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'local' }} >> .env
-        echo APP_DEBUG=${{ github.ref == 'refs/heads/main' && 'false' || 'true' }} >> .env
-        echo DB_CONNECTION=pgsql >> .env
-        echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-        echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-        echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
-        echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
-        echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> .env
+        sed -i 's/^APP_ENV=.*/APP_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'local' }}/g' .env
+        sed -i 's/^APP_DEBUG=.*/APP_DEBUG=${{ github.ref == 'refs/heads/main' && 'false' || 'true' }}/g' .env
+        sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/g' .env
+        sed -i 's/^DB_HOST=.*/DB_HOST=${{ secrets.DB_HOST }}/g' .env
+        sed -i 's/^DB_PORT=.*/DB_PORT=${{ secrets.DB_PORT }}/g' .env
+        sed -i 's/^DB_DATABASE=.*/DB_DATABASE=${{ secrets.DB_DATABASE }}/g' .env
+        sed -i 's/^DB_USERNAME=.*/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
+        sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD="${{ secrets.DB_PASSWORD }}"/g' .env
     - name: Build the Docker image
       run: |
         docker build -t backend .
