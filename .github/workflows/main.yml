@@ -56,8 +56,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        script_stop_old_container: |
+        script: |
           docker rm -f backend || true
-        script_start_new_container: |
           docker run -d --name backend -p 8000:8000 backend 
           docker image prune -af
