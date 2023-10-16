@@ -22,7 +22,7 @@ jobs:
         echo DB_PORT=${{ secrets.DB_PORT }} >> .env
         echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
         echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
-        echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+        echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> .env
     - name: Build the Docker image
       run: |
         docker build -t backend .
