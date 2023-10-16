@@ -1,32 +1,41 @@
-# Use a imagem base do PHP 8.1-alpine
-FROM php:8.1-alpine
+# ---- Estágio de construção ----
 
-# Instale as dependências do PHP
-RUN apk add --no-cache autoconf gcc g++ make postgresql-dev
+# Utiliza a imagem mais recente do Composer como imagem base para o estágio de construção
+FROM composer:latest AS build  
 
-# Instale o Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Define /app como o diretório de trabalho
+WORKDIR /app  
 
-# Copie os arquivos de código-fonte para a imagem Docker
-COPY . /app
+# Copia os arquivos do diretório atual para o diretório /app no container
+COPY . /app 
 
-# Defina o diretório de trabalho para o diretório raiz do projeto
-WORKDIR /app
+# Instala as dependências do projeto usando o Composer;
+# Instala os headers do Linux necessários para algumas dependências
+RUN composer clearcache && composer install -o && composer diagnose && \  
+    apk add --no-cache linux-headers  
 
-# Instale as dependências do Laravel
-RUN composer install
+# ---- Estágio final ----
 
-# Gere o arquivo de configuração do Laravel
-RUN php artisan key:generate
+# Utiliza a imagem php:8.1-alpine como imagem base para o estágio final
+FROM php:8.1-alpine  
 
-# Compile o CSS e o JavaScript da aplicação
-RUN php artisan optimize
+# Copia os arquivos e dependências do estágio de construção para o estágio final
+COPY --from=build /app /app  
 
-# Exponha a porta em que a aplicação estará escutando (porta 8000)
-EXPOSE 8000
+# Define /app como o diretório de trabalho
+WORKDIR /app 
 
-# Defina o ambiente da aplicação como production
-ENV APP_ENV=production
+# Instala as dependências necessárias para a extensão pdo_pgsql;
+# Instala as extensões pdo, pgsql e pdo_pgsql;
+# Gera a chave de aplicação do Laravel;
+# Otimiza a aplicação Laravel;
+RUN apk add --no-cache autoconf gcc g++ make postgresql-dev && \  
+    docker-php-ext-install pdo pgsql pdo_pgsql  && \  
+    php artisan key:generate && \ 
+    php artisan optimize 
+    
+# Expõe a porta 8000 do container;
+EXPOSE 8000 
 
-# Inicie o servidor PHP embutido na porta 8000 (não é necessário definir, pois é padrão)
-CMD ["php", "artisan", "serve"]
+# Inicia o servidor embutido do PHP na porta 8000 acessível fora do container;
+CMD ["php", "artisan", "serve", "--host=0.0.0.0"]  
