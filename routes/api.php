@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\HealthCheck\StatusController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Users\UsersAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/health-check', StatusController::class);
+
+Route::post('/users', UsersAuthController::class);
