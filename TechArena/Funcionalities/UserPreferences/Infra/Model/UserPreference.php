@@ -6,16 +6,16 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class UserPreference implements Arrayable
 {
-    private ?int $user_id;
-    private ?int $preference_id;
+    private int $user_id;
+    private int $preference_id;
     private string $desc_preference; 
-    private string $value; 
+    private string|null $value; 
 
     public function __construct(
         int $user_id,        
         int $preference_id,
         string $desc_preference,
-        string $value,
+        string|null $value,
     ) {
         $this->user_id = $user_id;
         $this->preference_id = $preference_id;
@@ -45,7 +45,7 @@ class UserPreference implements Arrayable
         return $this->desc_preference;
     }
 
-    public function getValue(): string
+    public function getValue(): string|null
     {
         return $this->value;
     }

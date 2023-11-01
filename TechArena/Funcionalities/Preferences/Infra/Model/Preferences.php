@@ -8,12 +8,12 @@ class Preferences implements Arrayable
 {
     private int $preference_id;
     private string $desc_preference;
-    private ?string $default_value;
+    private null|string $default_value;
 
     public function __construct(
         int $preference_id,
         string $desc_preference,
-        ?string $default_value,
+        null|string $default_value,
     ) {
         $this->preference_id = $preference_id;
         $this->desc_preference = $desc_preference;
@@ -29,7 +29,7 @@ class Preferences implements Arrayable
         return $this->desc_preference;
     }
 
-    public function getDefaultValue(): string
+    public function getDefaultValue(): null|string
     {
         return $this->default_value;
     }

@@ -22,7 +22,7 @@ class UsersAuthController extends Controller
     {
         try {
             $userDecoded = $this->autheticateToken($request["idToken"]);
-            $age = DateTime::createFromFormat('Y-m-d', $request['dt_birth'])->diff(new DateTime())->y;
+            $age = (DateTime::createFromFormat('Y-m-d', $request['dt_birth']))->diff(new DateTime())->y;
             if($age<18) throw new Exception('Você não possui idade suficiente :(');
             $user = new User($userDecoded->name, null, $userDecoded->picture, $userDecoded->email, DateTime::createFromFormat('Y-m-d', $request['dt_birth']), $request['gender']);
             $response = $this->auth->domain($user);

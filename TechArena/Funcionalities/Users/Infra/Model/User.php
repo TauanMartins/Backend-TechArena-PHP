@@ -7,9 +7,9 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class User implements Arrayable
 {
-    private ?int $id;
+    private null|int $id;
     private string $name;
-    private ?string $username;
+    private null|string $username;
     private string $image;
     private string $email;
     private DateTime $dt_birth; // Adjusted data type to DateTime
@@ -18,7 +18,7 @@ class User implements Arrayable
 
     public function __construct(
         string $name,
-        ?string $username,
+        null|string $username,
         string $image,
         string $email,
         DateTime $dt_birth,
@@ -38,7 +38,7 @@ class User implements Arrayable
     {
         $this->id = $id;
     }
-    public function getId(): int
+    public function getId(): null|int
     {
         return $this->id;
     }
@@ -48,7 +48,7 @@ class User implements Arrayable
         return $this->name;
     }
 
-    public function getUsername(): string
+    public function getUsername(): null|string
     {
         return $this->username;
     }
@@ -84,9 +84,9 @@ class User implements Arrayable
             'name' => $this->name,
             'image' => $this->image,
             'email' => $this->email,
-            'dt_birth' => $this->dt_birth->format('Y-m-d'), // Date format adjusted
+            'dt_birth' => $this->dt_birth->format('Y-m-d'),
             'gender' => $this->gender,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'), // Change to your desired date format
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 
@@ -97,8 +97,8 @@ class User implements Arrayable
             $data['username'],
             $data['image'],
             $data['email'],
-            DateTime::createFromFormat('Y-m-d', $data['dt_birth']), // Adjust the format as needed
-            $data['gender'] // Assuming 'created_at' is in a valid date format
+            DateTime::createFromFormat('Y-m-d', $data['dt_birth']),
+            $data['gender']
         );
     }
 }
