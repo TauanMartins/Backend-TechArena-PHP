@@ -14,11 +14,11 @@ use TechArena\Funcionalities\Users\Infra\Model\User;
 class UsersRepository implements Base
 {
 
-    public function select(User $user): User
+    public function select(string $email): User
     {
         try {
             $userData = DB::table('public.user', 'u')
-                ->where('u.email', '=', $user->getEmail())
+                ->where('u.email', '=', $email)
                 ->first();
             $user = new User($userData->name, null, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender);
             $user->setId($userData->id);

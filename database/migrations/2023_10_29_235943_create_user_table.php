@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('public.user', function (Blueprint $table) {
             $table->id();
+            $table->string('image', 400);
             $table->string('name', 150);
             $table->string('email', 150);
             $table->date('dt_birth');

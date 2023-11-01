@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HealthCheck\StatusController;
+use App\Http\Controllers\Preferences\UsersPreferedThemeController;
 use App\Http\Controllers\Users\UsersAuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health-check', StatusController::class);
 
 Route::post('/users', UsersAuthController::class);
+Route::put('/users/theme', UsersPreferedThemeController::class);

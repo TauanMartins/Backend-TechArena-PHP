@@ -1,13 +1,14 @@
 <?php
 
 namespace TechArena\Funcionalities\Preferences\Infra\Interfaces;
-use TechArena\Funcionalities\Users\Infra\Model\User;
+use TechArena\Funcionalities\Preferences\Infra\Model\Preferences;
 
 interface PreferencesInterface
 {
-    public function select(User $user);
-    public function create(User $user);
-    public function update(User $user);
-    public function delete(User $user);
+    public function select_specific(string $desc_preference): Preferences;
+    public function select(): array;
+    public function create(Preferences $preferences);
+    public function update(Preferences $preferences);
+    public function delete(Preferences $preferences);
 
 }

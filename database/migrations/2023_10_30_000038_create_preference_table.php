@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('public.preference', function (Blueprint $table) {
             $table->id();
             $table->string('desc_preference', 150);
+            $table->string('default_value', 30)->nullable();
         });
     }
 
