@@ -89,6 +89,7 @@ class User implements Arrayable
     {
         return [
             'name' => $this->name,
+            'username' => $this->username,
             'image' => $this->image,
             'email' => $this->email,
             'dt_birth' => $this->dt_birth->format('Y-m-d'),

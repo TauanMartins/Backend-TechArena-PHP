@@ -20,7 +20,7 @@ class UsersRepository implements Base
             $userData = DB::table('public.user', 'u')
                 ->where('u.email', '=', $email)
                 ->first();
-            $user = new User($userData->name, null, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender, $userData->permission_id);
+            $user = new User($userData->name, $userData->username, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender, $userData->permission_id);
             $user->setId($userData->id);
             return $user;
         } catch (Exception $e) {
