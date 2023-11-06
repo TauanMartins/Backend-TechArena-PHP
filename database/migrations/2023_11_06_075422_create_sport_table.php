@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('preference', function (Blueprint $table) {
+        Schema::create('sport', function (Blueprint $table) {
             $table->id()->comment('Chave primária autoincrementável.');
-            $table->string('desc_preference', 45)->comment('Descrição da preferência.');
-            $table->string('default_value', 45)->nullable()->comment('Valor padrão para a preferência.');
+            $table->string('name', 150)->unique()->comment('Nome do esporte.');
+            $table->unsignedInteger('default_value_player_numbers')->comment('Número padrão de jogadores para o esporte.');
         });
     }
 
@@ -23,7 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('preference');
+        Schema::dropIfExists('sport');
     }
 };
-

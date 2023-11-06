@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Database\Seeder;
 
-class PreferenceSeeder extends Seeder
+class PermissionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,9 +14,10 @@ class PreferenceSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('preference')->insert([
-            'desc_preference' => 'prefered_theme',
-            'default_value' => null
+        DB::table('permission')->insert([
+            ['symbol' => 'U', 'slug'=> 'user'],
+            ['symbol' => 'A', 'slug'=>'admin'],
+            ['symbol' => 'G', 'slug'=> 'guest']
         ]);
     }
 }
