@@ -4,6 +4,9 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\Arenas\Infra\Interfaces\ArenasInterface;
+use TechArena\Funcionalities\Arenas\Infra\Repository\Database\ArenasRepository as ArenasRepositoryConcretely;
+
 use TechArena\Funcionalities\Permissions\Infra\Interfaces\PermissionsInterface;
 use TechArena\Funcionalities\Permissions\Infra\Repository\Database\PermissionRepository as PermissionRepositoryConcretely;
 
@@ -25,6 +28,7 @@ use TechArena\Funcionalities\Users\Infra\Repository\Database\UsersRepository as 
 class ServiceProvider extends Base
 {
     public $bindings = [
+        ArenasInterface::class => ArenasRepositoryConcretely::class,
         PermissionsInterface::class => PermissionRepositoryConcretely::class,
         PreferencesInterface::class => PreferenceRepositoryConcretely::class,
         UserPreferencesInterface::class => UserPreferencesRepositoryConcretely::class,
