@@ -3,28 +3,46 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use DateInterval;
 use DateTime;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use TechArena\Funcionalities\Permissions\Infra\Interfaces\PermissionsInterface;
 use TechArena\Funcionalities\Users\Infra\Model\User;
 use TechArena\Funcionalities\Users\Users;
 
 class UsersAuthController extends Controller
 {
     private Users $auth;
-    public function __construct(Users $auth)
+    private PermissionsInterface $permissions;
+    public function __construct(Users $auth, PermissionsInterface $permissions)
     {
         $this->auth = $auth;
+        $this->permissions = $permissions;
     }
     public function __invoke(Request $request)
     {
         try {
             $userDecoded = $this->autheticateToken($request["idToken"]);
-            $age = (DateTime::createFromFormat('Y-m-d', $request['dt_birth']))->diff(new DateTime())->y;
-            if($age<18) throw new Exception('Você não possui idade suficiente :(');
-            $user = new User($userDecoded->name, null, $userDecoded->picture, $userDecoded->email, DateTime::createFromFormat('Y-m-d', $request['dt_birth']), $request['gender']);
+            $email = $userDecoded->email;
+            $username = strstr($email, '@', true);
+            $dt_birth = $request['dt_birth'] ? DateTime::createFromFormat('Y-m-d', $request['dt_birth']) : (new DateTime())->sub(new DateInterval('P18Y'));
+            $gender = ($request['gender'] == 'Male') ? 'M' : (($request['gender'] == 'Female') ? 'F' : 'O');
+            $age = $dt_birth->diff(new DateTime())->y;            
+            if ($age < 18) throw new Exception('Você não possui idade suficiente :(');
+            $permission = $this->permissions->selectBySlug('user');
+
+            $user = new User(
+                $userDecoded->name,
+                $username,
+                $userDecoded->picture,
+                $email,
+                $dt_birth,
+                $gender,
+                $permission->getId()
+            );
             $response = $this->auth->domain($user);
             return response()->json($response, 200);
         } catch (Exception $e) {

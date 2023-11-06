@@ -9,20 +9,22 @@ class User implements Arrayable
 {
     private null|int $id;
     private string $name;
-    private null|string $username;
+    private string $username;
     private string $image;
     private string $email;
     private DateTime $dt_birth; // Adjusted data type to DateTime
     private string $gender;
     private DateTime $created_at; // Fixed Date to DateTime
+    private int $permission; // Fixed Date to DateTime
 
     public function __construct(
         string $name,
-        null|string $username,
+        string $username,
         string $image,
         string $email,
         DateTime $dt_birth,
-        string $gender
+        string $gender,
+        int $permission
     ) {
         $this->id = null;
         $this->name = $name;
@@ -31,6 +33,7 @@ class User implements Arrayable
         $this->email = $email;
         $this->dt_birth = $dt_birth;
         $this->gender = $gender;
+        $this->permission = $permission;
         $this->created_at = new DateTime();
     }
 
@@ -48,7 +51,7 @@ class User implements Arrayable
         return $this->name;
     }
 
-    public function getUsername(): null|string
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -72,6 +75,10 @@ class User implements Arrayable
     {
         return $this->gender;
     }
+    public function getPermission(): int
+    {
+        return $this->permission;
+    }
 
     public function getCreatedAt(): DateTime
     {
@@ -86,6 +93,7 @@ class User implements Arrayable
             'email' => $this->email,
             'dt_birth' => $this->dt_birth->format('Y-m-d'),
             'gender' => $this->gender,
+            'permission' => $this->permission,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
@@ -98,7 +106,8 @@ class User implements Arrayable
             $data['image'],
             $data['email'],
             DateTime::createFromFormat('Y-m-d', $data['dt_birth']),
-            $data['gender']
+            $data['gender'],
+            $data['permission']
         );
     }
 }
