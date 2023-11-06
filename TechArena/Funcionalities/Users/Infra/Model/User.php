@@ -77,7 +77,7 @@ class User implements Arrayable
     }
     public function getPermission(): int
     {
-        return $this->permission;
+        return $this->permission_id;
     }
 
     public function getCreatedAt(): DateTime
@@ -93,7 +93,7 @@ class User implements Arrayable
             'email' => $this->email,
             'dt_birth' => $this->dt_birth->format('Y-m-d'),
             'gender' => $this->gender,
-            'permission_id' => $this->permission,
+            'permission_id' => $this->permission_id,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
