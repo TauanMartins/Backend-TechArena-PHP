@@ -20,7 +20,7 @@ class UsersRepository implements Base
             $userData = DB::table('public.user', 'u')
                 ->where('u.email', '=', $email)
                 ->first();
-            $user = new User($userData->name, null, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender);
+            $user = new User($userData->name, null, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender, $userData->permission_id);
             $user->setId($userData->id);
             return $user;
         } catch (Exception $e) {
@@ -45,7 +45,7 @@ class UsersRepository implements Base
     }
     public function exist(User $user)
     {
-        return DB::table('public.user', 'u')
+        return DB::table('user', 'u')
             ->where('u.email', '=', $user->getEmail())
             ->exists();
     }

@@ -19,9 +19,9 @@ class UserPreferencePreferedThemeRepository implements Base
         try {
             $userPreferences = [];
 
-            $userPreference = DB::table("public.user_preference")
+            $userPreference = DB::table("user_preference")
                 ->where("user_id", $user->getId())
-                ->where("preferences_id", $preference->getIdPreference())
+                ->where("preference_id", $preference->getIdPreference())
                 ->first();
             $userPreferences[$preference->desc_preference] = $userPreference ? $userPreference->value : $preference->getDefaultValue();
 
@@ -40,7 +40,7 @@ class UserPreferencePreferedThemeRepository implements Base
             foreach ($preferences as $preference) {
                 DB::table("user_preference", 'up')->insert([
                     'user_id' => $user->getId(),
-                    'preferences_id' => $preference->id,
+                    'preference_id' => $preference->id,
                     'value' => $preference->default_value,
                 ]);
             }
@@ -53,7 +53,7 @@ class UserPreferencePreferedThemeRepository implements Base
         DB::table("user_preference", 'up')
             ->where(['user_id' => $userPreference->getIdUser()])
             ->update([
-                'preferences_id' => $userPreference->getIdPreference(),
+                'preference_id' => $userPreference->getIdPreference(),
                 'value' => $userPreference->getValue(),
             ]);
     }

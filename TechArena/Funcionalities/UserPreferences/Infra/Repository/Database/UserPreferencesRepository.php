@@ -19,9 +19,9 @@ class UserPreferencesRepository implements Base
             $userPreferences = [];
 
             foreach ($preferences as $preference) {
-                $userPreference = DB::table("public.user_preference")
+                $userPreference = DB::table("user_preference")
                     ->where("user_id", $user->getId())
-                    ->where("preferences_id", $preference->id)
+                    ->where("preference_id", $preference->id)
                     ->first();
 
                 $userPreferences[$preference->desc_preference] = $userPreference ? $userPreference->value : $preference->default_value;
@@ -41,7 +41,7 @@ class UserPreferencesRepository implements Base
             foreach ($preferences as $preference) {
                 DB::table("user_preference", 'up')->insert([
                     'user_id' => $user->getId(),
-                    'preferences_id' => $preference->id,
+                    'preference_id' => $preference->id,
                     'value' => $preference->default_value,
                 ]);
             }
