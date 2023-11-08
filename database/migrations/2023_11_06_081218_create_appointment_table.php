@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignId('sport_arena_id')->constrained('sport_arena')->comment('Referência ao local esportivo do agendamento');
             $table->foreignId('schedule_id')->constrained('schedule')->comment('Referência ao horário do agendamento');
             $table->foreignId('organizer_id')->constrained('user')->comment('Referência ao organizador do agendamento');
+            $table->foreignId('chat_id')->constrained('chat')->comment('Referência ao chat do agendamento');
 
             $table->unique(['sport_arena_id', 'schedule_id', 'date'], 'unique_appointment');
         });

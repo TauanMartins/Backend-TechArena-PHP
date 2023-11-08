@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team', function (Blueprint $table) {
+        Schema::create('message', function (Blueprint $table) {
             $table->id()->comment('Identificador único para a equipe');
-            $table->string('name', 45)->comment('Nome da equipe');
-            $table->text('description')->nullable()->comment('Descrição da equipe');
-            $table->bigInteger('team_number')->comment('Número identificador da equipe');
-            $table->string('image', 150)->nullable()->comment('Caminho da imagem da equipe');            
+            $table->text('message')->nullable()->comment('Mensagem enviada');          
             $table->dateTime('created_at')->comment('Data e hora de criação do registro.');
             $table->foreignId('chat_id')->constrained('chat')->comment('Referência ao chat do agendamento');
+            $table->foreignId('user_id')->constrained('user')->comment('Referência ao usuário que enviou a mensagem');
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team');
+        Schema::dropIfExists('message');
     }
 };
