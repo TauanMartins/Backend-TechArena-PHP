@@ -4,23 +4,23 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
-use TechArena\Funcionalities\Arenas\Infra\Interfaces\ArenasInterface;
-use TechArena\Funcionalities\Arenas\Infra\Repository\Database\ArenasRepository as ArenasRepositoryConcretely;
+use TechArena\Funcionalities\Arena\Infra\Interfaces\ArenaInterface;
+use TechArena\Funcionalities\Arena\Infra\Repository\Database\ArenaRepository as ArenaRepositoryConcretely;
 
-use TechArena\Funcionalities\Permissions\Infra\Interfaces\PermissionsInterface;
-use TechArena\Funcionalities\Permissions\Infra\Repository\Database\PermissionRepository as PermissionRepositoryConcretely;
+use TechArena\Funcionalities\Permission\Infra\Interfaces\PermissionInterface;
+use TechArena\Funcionalities\Permission\Infra\Repository\Database\PermissionRepository as PermissionRepositoryConcretely;
 
-use TechArena\Funcionalities\Preferences\Infra\Interfaces\PreferencesInterface;
-use TechArena\Funcionalities\Preferences\Infra\Repository\Database\PreferencesRepository as PreferenceRepositoryConcretely;
+use TechArena\Funcionalities\Preference\Infra\Interfaces\PreferenceInterface;
+use TechArena\Funcionalities\Preference\Infra\Repository\Database\PreferenceRepository as PreferenceRepositoryConcretely;
 
-use TechArena\Funcionalities\UserPreferences\Infra\Interfaces\UserPreferencesInterface;
-use TechArena\Funcionalities\UserPreferences\Infra\Repository\Database\UserPreferencesRepository as UserPreferencesRepositoryConcretely;
+use TechArena\Funcionalities\UserPreference\Infra\Interfaces\UserPreferenceInterface;
+use TechArena\Funcionalities\UserPreference\Infra\Repository\Database\UserPreferenceRepository as UserPreferenceRepositoryConcretely;
 
-use TechArena\Funcionalities\UserPreferences\Infra\Interfaces\UserPreferencePreferedThemeInterface;
-use TechArena\Funcionalities\UserPreferences\Infra\Repository\Database\UserPreferencePreferedThemeRepository as UserPreferencePreferedThemeRepositoryConcretely;
+use TechArena\Funcionalities\UserPreference\Infra\Interfaces\UserPreferencePreferedThemeInterface;
+use TechArena\Funcionalities\UserPreference\Infra\Repository\Database\UserPreferencePreferedThemeRepository as UserPreferencePreferedThemeRepositoryConcretely;
 
-use TechArena\Funcionalities\Users\Infra\Interfaces\UsersInterface;
-use TechArena\Funcionalities\Users\Infra\Repository\Database\UsersRepository as UsersRepositoryConcretely;
+use TechArena\Funcionalities\User\Infra\Interfaces\UserInterface;
+use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as UserRepositoryConcretely;
 
 /**
  * bind a deps with laravel service provider
@@ -28,11 +28,11 @@ use TechArena\Funcionalities\Users\Infra\Repository\Database\UsersRepository as 
 class ServiceProvider extends Base
 {
     public $bindings = [
-        ArenasInterface::class => ArenasRepositoryConcretely::class,
-        PermissionsInterface::class => PermissionRepositoryConcretely::class,
-        PreferencesInterface::class => PreferenceRepositoryConcretely::class,
-        UserPreferencesInterface::class => UserPreferencesRepositoryConcretely::class,
+        ArenaInterface::class => ArenaRepositoryConcretely::class,
+        PermissionInterface::class => PermissionRepositoryConcretely::class,
+        PreferenceInterface::class => PreferenceRepositoryConcretely::class,
+        UserPreferenceInterface::class => UserPreferenceRepositoryConcretely::class,
         UserPreferencePreferedThemeInterface::class => UserPreferencePreferedThemeRepositoryConcretely::class,
-        UsersInterface::class => UsersRepositoryConcretely::class
+        UserInterface::class => UserRepositoryConcretely::class
     ];
 }

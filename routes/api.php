@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Arenas\ArenasCreateController;
-use App\Http\Controllers\Arenas\ArenasListAllController;
+use App\Http\Controllers\Arena\ArenaCreateController;
+use App\Http\Controllers\Arena\ArenaListAllController;
 use App\Http\Controllers\HealthCheck\StatusController;
-use App\Http\Controllers\Preferences\UsersPreferedThemeController;
-use App\Http\Controllers\Users\UsersAuthController;
+use App\Http\Controllers\Preference\UserPreferedThemeController;
+use App\Http\Controllers\User\UserAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,13 +20,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/health-check', StatusController::class);
 
-// Arenas
-Route::get('/arenas', ArenasListAllController::class);
-Route::post('/arenas', ArenasCreateController::class);
+// Arena
+Route::get('/arenas', ArenaListAllController::class);
+Route::post('/arenas', ArenaCreateController::class);
 
-// Users
-Route::post('/users', UsersAuthController::class);
+// User
+Route::post('/users', UserAuthController::class);
+Route::post('/users/admin', UserAuthController::class);
 
 // Update theme preferences
-Route::put('/users/theme', UsersPreferedThemeController::class);
+Route::put('/users/theme', UserPreferedThemeController::class);
 
