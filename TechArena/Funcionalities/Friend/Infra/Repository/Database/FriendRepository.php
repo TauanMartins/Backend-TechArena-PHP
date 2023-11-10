@@ -62,8 +62,8 @@ class FriendRepository implements Base
             $friendRequestsReceived = DB::table('friend')
                 ->join('user as u', 'friend.user_1_id', '=', 'u.id')
                 ->where('friend.user_2_id', '=', $userId)
-                ->where('friend.user_1_accepted', '=', false) // Excluir os aceitos
-                ->select('u.id', 'u.image', 'u.name', 'u.username', 'friend.user_1_accepted as accepted')
+                ->where('friend.user_2_accepted', '=', false) 
+                ->select('u.id', 'u.image', 'u.name', 'u.username', 'friend.user_2_accepted as accepted')
                 ->get()
                 ->toArray();
             return $friendRequestsReceived;
