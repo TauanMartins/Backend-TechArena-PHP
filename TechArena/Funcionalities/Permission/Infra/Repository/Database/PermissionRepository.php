@@ -35,5 +35,17 @@ class PermissionRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
+    public function selectById(string $id): Permission
+    {
+        try {
+            $permission = DB::table('permission', 'p')
+                ->where('p.id', '=', $id)
+                ->first();
+
+            return Permission::fromArray((array) $permission);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 
 }

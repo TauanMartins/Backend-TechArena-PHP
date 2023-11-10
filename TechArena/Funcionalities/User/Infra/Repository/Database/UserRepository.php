@@ -7,8 +7,10 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 
 
+use TechArena\Funcionalities\Permission\Infra\Model\Permission;
 use TechArena\Funcionalities\User\Infra\Interfaces\UserInterface as Base;
 use TechArena\Funcionalities\User\Infra\Model\User;
+use TechArena\Funcionalities\Permission\Infra\Interfaces\PermissionInterface;
 
 class UserRepository implements Base
 {
@@ -25,6 +27,21 @@ class UserRepository implements Base
             $user = new User($userData->name, $userData->username, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender, $userData->permission_id);
             $user->setId($userData->id);
             return $user;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function selectPermission(string $email): Permission
+    {
+        try {
+            $userPermission = DB::table('user', 'u')
+                ->select('u.permission_id')
+                ->where('u.email', '=', $email)
+                ->first();
+                /** @var PermissionInterface $permissionFinder */
+            $permissionFinder = app(PermissionInterface::class);
+            $permission = $permissionFinder->selectById($userPermission->permission_id);
+            return $permission;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

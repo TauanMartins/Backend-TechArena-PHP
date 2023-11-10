@@ -36,9 +36,14 @@ class User
                 DB::rollBack();
             }
         }
+
+        $preferences = $this->repositoryPreference->select($user);
+        $permission = $this->repositoryUser->selectPermission($user->getEmail());
         return [
-            'preferences' => $this->repositoryPreference->select($user),
-            'user' => $this->repositoryUser->select($user->getEmail()),
+            'preferences' => $preferences,
+            'user' => [
+                'permission' => $permission->getSymbol()
+            ],
         ];
 
     }

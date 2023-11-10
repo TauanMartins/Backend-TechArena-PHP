@@ -7,5 +7,6 @@ interface PermissionInterface
 {
     public function select(): array;
     public function selectBySlug(string $slug): Permission;
+    public function selectById(string $id): Permission;
 
 }
