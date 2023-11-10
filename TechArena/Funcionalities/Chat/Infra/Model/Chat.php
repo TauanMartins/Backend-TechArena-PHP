@@ -7,23 +7,28 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class Chat implements Arrayable
 {
-    private int $id;
+    private null|int $id;
     private null|int $last_message_id;
-    private DateTime $created_at; 
+    private DateTime $created_at;
 
-    public function __construct(
-        int $id,
-        ?int $last_message_id,
-    ) {
-        $this->id = $id;
-        $this->last_message_id = $last_message_id;        
+    public function __construct()
+    {
+        $this->id = null;
+        $this->last_message_id = null;
         $this->created_at = new DateTime();
+    }
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
     public function getId(): int
     {
         return $this->id;
     }
-
+    public function setLastMessageId(int $last_message_id): void
+    {
+        $this->last_message_id = $last_message_id;
+    }
     public function getLastMessageId(): null|int
     {
         return $this->last_message_id;
@@ -41,12 +46,15 @@ class Chat implements Arrayable
             'created_at' => $this->created_at
         ];
     }
-
-    public static function fromArray(array $data): self
+    public function toArrayInsert(): array
     {
-        return new self(
-            $data['id'],
-            $data['last_message_id']
-        );
+        return [
+            'created_at' => $this->created_at
+        ];
+    }
+
+    public static function fromArray(): self
+    {
+        return new self();
     }
 }

@@ -33,7 +33,7 @@ class UserPreferedThemeController extends Controller
             $response = $this->repository3->update($prefered_theme);
             return response()->json($response, 200);
         } catch (Exception $e) {
-            return response()->json('Erro na requisição de dados de usuário. ' . $e->getMessage(), 404);
+            return response()->json(['message' => $e->getMessage()], 404);
         }
     }
 }

@@ -4,6 +4,15 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\Message\Infra\Interfaces\MessageInterface;
+use TechArena\Funcionalities\Message\Infra\Repository\Database\MessageRepository as MessageRepositoryConcretely;
+
+use TechArena\Funcionalities\Chat\Infra\Interfaces\ChatInterface;
+use TechArena\Funcionalities\Chat\Infra\Repository\Database\ChatRepository as ChatRepositoryConcretely;
+
+use TechArena\Funcionalities\UserChat\Infra\Interfaces\UserChatInterface;
+use TechArena\Funcionalities\UserChat\Infra\Repository\Database\UserChatRepository as UserChatRepositoryConcretely;
+
 use TechArena\Funcionalities\Arena\Infra\Interfaces\ArenaInterface;
 use TechArena\Funcionalities\Arena\Infra\Repository\Database\ArenaRepository as ArenaRepositoryConcretely;
 
@@ -28,6 +37,9 @@ use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as Us
 class ServiceProvider extends Base
 {
     public $bindings = [
+        MessageInterface::class => MessageRepositoryConcretely::class,
+        UserChatInterface::class => UserChatRepositoryConcretely::class,
+        ChatInterface::class => ChatRepositoryConcretely::class,
         ArenaInterface::class => ArenaRepositoryConcretely::class,
         PermissionInterface::class => PermissionRepositoryConcretely::class,
         PreferenceInterface::class => PreferenceRepositoryConcretely::class,

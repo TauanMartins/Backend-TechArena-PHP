@@ -19,6 +19,9 @@ class UserRepository implements Base
             $userData = DB::table('public.user', 'u')
                 ->where('u.email', '=', $email)
                 ->first();
+            if (!$userData) {
+                throw new Exception('Usuário não encontrado.');
+            }
             $user = new User($userData->name, $userData->username, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender, $userData->permission_id);
             $user->setId($userData->id);
             return $user;

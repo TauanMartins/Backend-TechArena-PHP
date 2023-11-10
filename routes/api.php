@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\Arena\ArenaCreateController;
 use App\Http\Controllers\Arena\ArenaListAllController;
+use App\Http\Controllers\Chat\ChatCreateController;
+use App\Http\Controllers\Chat\ChatListController;
 use App\Http\Controllers\HealthCheck\StatusController;
+use App\Http\Controllers\Message\MessageListController;
+use App\Http\Controllers\Message\MessageCreateController;
 use App\Http\Controllers\Preference\UserPreferedThemeController;
 use App\Http\Controllers\User\UserAuthController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +23,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/health-check', StatusController::class);
+
+// Message
+Route::get('/message', MessageListController::class);
+Route::post('/message', MessageCreateController::class);
+
+// Chat
+Route::post('/chat', ChatCreateController::class);
+Route::get('/chat', ChatListController::class);
 
 // Arena
 Route::get('/arenas', ArenaListAllController::class);
