@@ -42,7 +42,8 @@ class User
         return [
             'preferences' => $preferences,
             'user' => [
-                'permission' => $permission->getSymbol()
+                'permission' => $permission->getSymbol(),
+                'username' => $user->getUsername()
             ],
         ];
 
