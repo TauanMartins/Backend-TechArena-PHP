@@ -38,10 +38,24 @@ class UserRepository implements Base
                 ->select('u.permission_id')
                 ->where('u.email', '=', $email)
                 ->first();
-                /** @var PermissionInterface $permissionFinder */
+            /** @var PermissionInterface $permissionFinder */
             $permissionFinder = app(PermissionInterface::class);
             $permission = $permissionFinder->selectById($userPermission->permission_id);
             return $permission;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function selectAllByUsername(string $username): array
+    {
+        try {
+            $users = DB::table('user')
+            ->select('id', 'name', 'username', 'image')
+                ->where('username', 'like', '%' . strtolower($username) . '%')
+                ->get()
+                ->toArray();
+            return $users;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

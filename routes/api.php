@@ -9,6 +9,7 @@ use App\Http\Controllers\Message\MessageListController;
 use App\Http\Controllers\Message\MessageCreateController;
 use App\Http\Controllers\Preference\UserPreferedThemeController;
 use App\Http\Controllers\User\UserAuthController;
+use App\Http\Controllers\User\UsersListAllController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/health-check', StatusController::class);
 
+// Friend
+
+
 // Message
 Route::get('/message', MessageListController::class);
 Route::post('/message', MessageCreateController::class);
@@ -37,6 +41,7 @@ Route::get('/arenas', ArenaListAllController::class);
 Route::post('/arenas', ArenaCreateController::class);
 
 // User
+Route::get('/users', UsersListAllController::class);
 Route::post('/users', UserAuthController::class);
 Route::post('/users/admin', UserAuthController::class);
 

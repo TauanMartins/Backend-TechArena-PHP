@@ -8,6 +8,7 @@ interface UserInterface
 {
     public function select(string $email): User;
     public function selectPermission(string $email): Permission;
+    public function selectAllByUsername(string $username): array;
     public function create(User $user);
     public function update(User $user);
     public function delete(User $user);
