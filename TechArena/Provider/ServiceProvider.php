@@ -4,6 +4,9 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\Friend\Infra\Interfaces\FriendInterface;
+use TechArena\Funcionalities\Friend\Infra\Repository\Database\FriendRepository as FriendRepositoryConcretely;
+
 use TechArena\Funcionalities\Message\Infra\Interfaces\MessageInterface;
 use TechArena\Funcionalities\Message\Infra\Repository\Database\MessageRepository as MessageRepositoryConcretely;
 
@@ -37,6 +40,7 @@ use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as Us
 class ServiceProvider extends Base
 {
     public $bindings = [
+        FriendInterface::class => FriendRepositoryConcretely::class,
         MessageInterface::class => MessageRepositoryConcretely::class,
         UserChatInterface::class => UserChatRepositoryConcretely::class,
         ChatInterface::class => ChatRepositoryConcretely::class,

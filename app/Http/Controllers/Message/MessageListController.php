@@ -24,7 +24,7 @@ class MessageListController extends Controller
     }
     public function __invoke(Request $request)
     {
-        $limit = $request->input('limit', 20); // valor padrão de 10 se não for fornecido
+        $limit = $request->input('limit', 20);
         $offset = $request->input('offset', 0);
         
         try {

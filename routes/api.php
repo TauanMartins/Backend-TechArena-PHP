@@ -4,6 +4,9 @@ use App\Http\Controllers\Arena\ArenaCreateController;
 use App\Http\Controllers\Arena\ArenaListAllController;
 use App\Http\Controllers\Chat\ChatCreateController;
 use App\Http\Controllers\Chat\ChatListController;
+use App\Http\Controllers\Friend\FriendCreateController;
+use App\Http\Controllers\Friend\FriendListAllController;
+use App\Http\Controllers\Friend\FriendUpdateController;
 use App\Http\Controllers\HealthCheck\StatusController;
 use App\Http\Controllers\Message\MessageListController;
 use App\Http\Controllers\Message\MessageCreateController;
@@ -26,7 +29,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health-check', StatusController::class);
 
 // Friend
-
+Route::get('/friend', FriendListAllController::class);
+Route::post('/friend', FriendCreateController::class);
+Route::put('/friend', FriendUpdateController::class);
 
 // Message
 Route::get('/message', MessageListController::class);

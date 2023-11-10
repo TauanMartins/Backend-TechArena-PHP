@@ -47,11 +47,27 @@ class UserRepository implements Base
         }
     }
 
+    public function selectByUsername(string $username): User
+    {
+        try {
+            $userData = DB::table('user')
+                ->where('username', '=', $username)
+                ->first();
+            if (!$userData) {
+                throw new Exception('Usuário não encontrado.');
+            }
+            $user = new User($userData->name, $userData->username, $userData->image, $userData->email, DateTime::createFromFormat('Y-m-d', $userData->dt_birth), $userData->gender, $userData->permission_id);
+            $user->setId($userData->id);
+            return $user;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function selectAllByUsername(string $username): array
     {
         try {
             $users = DB::table('user')
-            ->select('id', 'name', 'username', 'image')
+                ->select('id', 'name', 'username', 'image')
                 ->where('username', 'like', '%' . strtolower($username) . '%')
                 ->get()
                 ->toArray();
