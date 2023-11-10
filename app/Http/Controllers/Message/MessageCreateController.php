@@ -24,6 +24,8 @@ class MessageCreateController extends Controller
     }
     public function __invoke(Request $request)
     {
+        $limit = $request->input('limit', 20);
+        $offset = $request->input('offset', 0);
         try {
             $userDecoded = $this->autheticateToken($request["idToken"]);
             $email = $userDecoded->email;
@@ -32,8 +34,9 @@ class MessageCreateController extends Controller
             $message = $request["message"];
             $user_chat = new UserChat($chat_id, $user->getId());
             $message = new MessageModel($message, $chat_id, $user->getId());
-            $this->message->createMessage($user_chat, $message);  
-            return response()->json([], 200);
+            $this->message->createMessage($user_chat, $message);
+            $messages = $this->message->listMessages($user_chat, $limit, $offset); 
+            return response()->json($messages, 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }
