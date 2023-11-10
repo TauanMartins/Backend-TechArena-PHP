@@ -20,8 +20,8 @@ class ChatCreateController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $user1 = $this->user->select($request['email_user_1']);
-            $user2 = $this->user->select($request['email_user_2']);
+            $user1 = $this->user->selectByUsername($request['username_user_1']);
+            $user2 = $this->user->selectByUsername($request['username_user_2']);
             $chat_id = $this->chat->domain($user1, $user2);
             return response()->json(['chat_id' => $chat_id], 200);
         } catch (Exception $e) {
