@@ -21,7 +21,6 @@ class MessageRepository implements Base
             $messageDB = DB::table('message as m')
             ->select('m.id','m.message','m.created_at','m.chat_id','u.username')
                 ->join('user as u','u.id','=','m.user_id')
-                ->where('user_id', $userChat->getUserId())
                 ->where('chat_id', $userChat->getChatId())
                 ->orderBy('created_at', 'asc')
                 ->limit($limit)
