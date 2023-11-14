@@ -25,7 +25,8 @@ class MessageRepository implements Base
                 ->orderBy('m.created_at', 'desc')
                 ->cursorPaginate(20, ['*'], 'cursor', $cursor)
                 ->toArray();
-            return array_reverse($messageDB);
+            $messageDB['data'] = array_reverse($messageDB['data']);
+            return $messageDB;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
