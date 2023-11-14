@@ -24,16 +24,15 @@ class MessageListController extends Controller
     }
     public function __invoke(Request $request)
     {
-        $limit = $request->input('limit', 20);
-        $offset = $request->input('offset', 0);
-        
+        $cursor = $request->input('cursor', 20);
+
         try {
             $userDecoded = $this->autheticateToken($request["idToken"]);
             $email = $userDecoded->email;
             $user = $this->user->select($email);
             $chat_id = $request["chat_id"];
             $user_chat = new UserChat($chat_id, $user->getId());
-            $messages = $this->message->listMessages($user_chat, $limit, $offset);
+            $messages = $this->message->listMessages($user_chat, $cursor);
             return response()->json($messages, 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);

@@ -36,10 +36,10 @@ class Message
         });
     }
 
-    public function listMessages(UserChat $userChat, int $limit, int $offset)
+    public function listMessages(UserChat $userChat, string $cursor)
     {
-        return $this->domain($userChat, function () use ($userChat, $limit, $offset) {
-            return $this->message->select($userChat, $limit, $offset);
+        return $this->domain($userChat, function () use ($userChat, $cursor) {
+            return $this->message->select($userChat, $cursor);
         });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Message;
 
+use App\Events\NewMessage;
 use App\Http\Controllers\Controller;
 use Exception;
 use Firebase\JWT\JWT;
@@ -24,8 +25,7 @@ class MessageCreateController extends Controller
     }
     public function __invoke(Request $request)
     {
-        $limit = $request->input('limit', 20);
-        $offset = $request->input('offset', 0);
+        $cursor = $request->input('cursor', 20);
         try {
             $userDecoded = $this->autheticateToken($request["idToken"]);
             $email = $userDecoded->email;
@@ -33,9 +33,10 @@ class MessageCreateController extends Controller
             $chat_id = $request["chat_id"];
             $message = $request["message"];
             $user_chat = new UserChat($chat_id, $user->getId());
-            $message = new MessageModel($message, $chat_id, $user->getId());
-            $this->message->createMessage($user_chat, $message);
-            $messages = $this->message->listMessages($user_chat, $limit, $offset); 
+            $messageModel = new MessageModel($message, $chat_id, $user->getId());
+            $this->message->createMessage($user_chat, $messageModel);
+            $messages = $this->message->listMessages($user_chat, $cursor); 
+            broadcast(new NewMessage($messageModel))->toOthers();
             return response()->json($messages, 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
