@@ -36,7 +36,7 @@ class MessageRepository implements Base
         try {
             $id = DB::table('message')->insertGetId($message->toArrayToInsert());
             DB::table('chat')->where('id', $message->getChatId())->update(['last_message_id' => $id]);
-
+            $message->setId($id);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

@@ -35,9 +35,8 @@ class MessageCreateController extends Controller
             $user_chat = new UserChat($chat_id, $user->getId());
             $messageModel = new MessageModel($message, $chat_id, $user->getId());
             $this->message->createMessage($user_chat, $messageModel);
-            $messages = $this->message->listMessages($user_chat, $cursor); 
             broadcast(new NewMessage($messageModel))->toOthers();
-            return response()->json($messages, 200);
+            return response()->json([], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }
