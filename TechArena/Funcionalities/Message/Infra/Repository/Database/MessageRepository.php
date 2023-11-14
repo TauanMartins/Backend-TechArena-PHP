@@ -15,14 +15,14 @@ use TechArena\Funcionalities\UserChat\Infra\Model\UserChat;
 class MessageRepository implements Base
 {
 
-    public function select(UserChat $userChat, string $cursor): array
+    public function select(UserChat $userChat, string|null $cursor): array
     {
         try {
             $messageDB = DB::table('message as m')
-            ->select('m.id','m.message','m.created_at','m.chat_id','u.username')
-                ->join('user as u','u.id','=','m.user_id')
-                ->where('chat_id', $userChat->getChatId())
-                ->orderBy('created_at', 'desc')
+                ->select('m.id', 'm.message', 'm.created_at', 'm.chat_id', 'u.username')
+                ->join('user as u', 'u.id', '=', 'm.user_id')
+                ->where('m.chat_id', $userChat->getChatId())
+                ->orderBy('m.created_at', 'desc')
                 ->cursorPaginate(20, ['*'], 'cursor', $cursor)
                 ->toArray();
             return array_reverse($messageDB);

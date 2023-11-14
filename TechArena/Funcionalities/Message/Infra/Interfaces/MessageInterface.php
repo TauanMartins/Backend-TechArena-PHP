@@ -6,7 +6,7 @@ use TechArena\Funcionalities\UserChat\Infra\Model\UserChat;
 
 interface MessageInterface
 {
-    public function select(UserChat $userChat, string $cursor);
+    public function select(UserChat $userChat, string|null $cursor);
     public function create(Message $message);
     public function update();
     public function delete();

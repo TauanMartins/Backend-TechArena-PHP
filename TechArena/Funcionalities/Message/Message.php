@@ -36,7 +36,7 @@ class Message
         });
     }
 
-    public function listMessages(UserChat $userChat, string $cursor)
+    public function listMessages(UserChat $userChat, string|null $cursor)
     {
         return $this->domain($userChat, function () use ($userChat, $cursor) {
             return $this->message->select($userChat, $cursor);

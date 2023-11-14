@@ -24,7 +24,7 @@ class MessageListController extends Controller
     }
     public function __invoke(Request $request)
     {
-        $cursor = $request->input('cursor', 20);
+        $cursor = $request->input('cursor', null);
 
         try {
             $userDecoded = $this->autheticateToken($request["idToken"]);
