@@ -23,7 +23,7 @@ class MessageRepository implements Base
                 ->join('user as u','u.id','=','m.user_id')
                 ->where('chat_id', $userChat->getChatId())
                 ->orderBy('created_at', 'desc')
-                ->cursorPaginate($cursor)
+                ->cursorPaginate(20, ['*'], 'cursor', $cursor)
                 ->toArray();
             return array_reverse($messageDB);
         } catch (Exception $e) {
