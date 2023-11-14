@@ -13,11 +13,7 @@ WORKDIR /app
 # Instala as extensões pdo, pgsql e pdo_pgsql;
 # Gera a chave de aplicação do Laravel;
 # Otimiza a aplicação Laravel;
-RUN apk add --no-cache autoconf gcc g++ make postgresql-dev && \  
-    docker-php-ext-install pdo pgsql pdo_pgsql  && \  
-    php artisan key:generate && \ 
-    php artisan optimize 
-    
+
 # Expõe a porta 8000 do container;
 EXPOSE 6001
 
