@@ -38,8 +38,8 @@ Route::get('/message', MessageListController::class);
 Route::post('/message', MessageCreateController::class);
 
 // Chat
-Route::post('/chat', ChatCreateController::class);
 Route::get('/chat', ChatListController::class);
+Route::post('/chat', ChatCreateController::class);
 
 // Arena
 Route::get('/arenas', ArenaListAllController::class);

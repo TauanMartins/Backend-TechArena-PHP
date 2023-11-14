@@ -13,3 +13,9 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+use TechArena\Funcionalities\UserChat\Infra\Model\UserChat;
+use TechArena\Funcionalities\UserChat\Infra\Interfaces\UserChatInterface;
+
+Broadcast::channel('chat.{chatId}', function () {
+    return true;
+});

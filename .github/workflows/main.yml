@@ -25,7 +25,7 @@ jobs:
         sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD="${{ secrets.DB_PASSWORD }}"/g' .env
     - name: Build the Docker image
       run: |
-        docker build -t backend .
+        docker build -f ./devops/php/Dockerfile -t backend .
     - name: Save Docker image to file
       run: docker save backend -o backend.tar
     - name: Copy Docker image to remote server
@@ -35,6 +35,19 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         source: backend.tar
+        target: /tmp
+    - name: Build the WebSocket Docker image
+      run: |
+        docker build -f ./devops/websocket/Dockerfile -t websocket .
+    - name: Save WebSocket Docker image to file
+      run: docker save websocket -o websocket.tar
+    - name: Copy WebSocket Docker image to remote server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: websocket.tar
         target: /tmp
 
   deploy:
@@ -59,4 +72,23 @@ jobs:
         script: |
           docker rm -f backend || true
           docker run -d --name backend -p 8000:8000 backend 
+          docker image prune -af
+    - name: SSH into remote server and load WebSocket Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/websocket.tar
+          rm /tmp/websocket.tar
+    - name: SSH into remote server and start WebSocket Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f websocket || true
+          docker run -d --name websocket -p 6001:6001 websocket
           docker image prune -af
