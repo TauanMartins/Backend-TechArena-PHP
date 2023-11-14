@@ -25,7 +25,7 @@ jobs:
         sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD="${{ secrets.DB_PASSWORD }}"/g' .env
     - name: Build the Docker image
       run: |
-        docker build -f ./devops/php/Dockerfile -t backend .
+        docker build -f ./.devops/php/Dockerfile -t backend .
     - name: Save Docker image to file
       run: docker save backend -o backend.tar
     - name: Copy Docker image to remote server
@@ -38,7 +38,7 @@ jobs:
         target: /tmp
     - name: Build the WebSocket Docker image
       run: |
-        docker build -f ./devops/websocket/Dockerfile -t websocket .
+        docker build -f ./.devops/websocket/Dockerfile -t websocket .
     - name: Save WebSocket Docker image to file
       run: docker save websocket -o websocket.tar
     - name: Copy WebSocket Docker image to remote server
