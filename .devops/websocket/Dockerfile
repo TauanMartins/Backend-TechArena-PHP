@@ -20,7 +20,7 @@ RUN composer clearcache && composer install -o && composer diagnose && \
 FROM php:8.1-alpine  
 
 # Copia os arquivos e dependências do estágio de construção para o estágio final
-COPY . /app
+COPY --from=build /app /app
 
 # Define /app como o diretório de trabalho
 WORKDIR /app 
