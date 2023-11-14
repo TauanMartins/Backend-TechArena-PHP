@@ -27,6 +27,7 @@ jobs:
         sed -i 's/^PUSHER_APP_ID=.*/PUSHER_APP_ID="${{ secrets.PUSHER_APP_ID }}"/g' .env
         sed -i 's/^PUSHER_APP_KEY=.*/PUSHER_APP_KEY="${{ secrets.PUSHER_APP_KEY }}"/g' .env
         sed -i 's/^PUSHER_APP_SECRET=.*/PUSHER_APP_SECRET="${{ secrets.PUSHER_APP_SECRET }}"/g' .env
+        sed -i 's/^PUSHER_SCHEME=.*/PUSHER_SCHEME="${{ secrets.PUSHER_SCHEME }}"/g' .env
         sed -i 's/^PUSHER_HOST=.*/PUSHER_HOST="${{ secrets.PUSHER_HOST }}"/g' .env
         sed -i 's/^PUSHER_PORT=.*/PUSHER_PORT="${{ secrets.PUSHER_PORT }}"/g' .env
     - name: Build the Docker image
@@ -42,6 +43,18 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         source: backend.tar
         target: /tmp
+    - name: Prepare .env file for WebSocket
+      run: |
+        cp ./.devops/websocket/.env.example ./.devops/websocket/.env
+        sed -i 's/^BROADCAST_DRIVER=.*/BROADCAST_DRIVER="${{ secrets.BROADCAST_DRIVER }}"/g' .env
+        sed -i 's/^PUSHER_APP_ID=.*/PUSHER_APP_ID="${{ secrets.PUSHER_APP_ID }}"/g' .env
+        sed -i 's/^PUSHER_APP_KEY=.*/PUSHER_APP_KEY="${{ secrets.PUSHER_APP_KEY }}"/g' .env
+        sed -i 's/^PUSHER_APP_SECRET=.*/PUSHER_APP_SECRET="${{ secrets.PUSHER_APP_SECRET }}"/g' .env
+        sed -i 's/^PUSHER_HOST_SERVER=.*/PUSHER_HOST_SERVER="${{ secrets.PUSHER_HOST_SERVER }}"/g' .env
+        sed -i 's/^PUSHER_PORT_SERVER=.*/PUSHER_PORT_SERVER="${{ secrets.PUSHER_PORT_SERVER }}"/g' .env
+        sed -i 's/^PUSHER_PORT_SERVER=.*/PUSHER_PORT_SERVER="${{ secrets.PUSHER_PORT_SERVER }}"/g' .env
+        sed -i 's/^PUSHER_SCHEME_SERVER=.*/PUSHER_SCHEME_SERVER="${{ secrets.PUSHER_SCHEME_SERVER }}"/g' .env
+        # Adicione outras variáveis necessárias para o WebSocket aqui
     - name: Build the WebSocket Docker image
       run: |
         docker build -f ./.devops/websocket/Dockerfile -t websocket .
