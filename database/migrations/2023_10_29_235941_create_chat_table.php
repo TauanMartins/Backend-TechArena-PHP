@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id()->comment('Chave primária autoincrementável.');
             $table->bigInteger('last_message_id')->nullable()->comment('Símbolo representativo da permissão.');
             $table->dateTime('created_at')->comment('Data e hora de criação do registro.');
+            $table->boolean('is_group_chat')->comment('Refere-se a um chat de time/agendamento?');
         });
     }
 

@@ -50,15 +50,64 @@ class ChatRepository implements Base
                 ->join('user_chat as uc', 'c.id', '=', 'uc.chat_id')
                 ->join('user as u', 'u.id', '=', 'uc.user_id')
                 ->where('u.id', $user->getId())
+                ->where('c.is_group_chat', '=', false)
                 ->select('c.id');
 
             $userChats = DB::table('user_chat as uc')
                 ->join('user as u', 'uc.user_id', '=', 'u.id')
                 ->join('chat as c', 'uc.chat_id', '=', 'c.id')
-                ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id') 
+                ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id')
                 ->whereIn('uc.chat_id', $subQuery)
                 ->where('u.id', '<>', $user->getId())
-                ->select('c.id', 'u.name', 'u.image', 'm.message as last_message') 
+                ->select('c.id', 'u.name', 'u.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
+                ->get()
+                ->toArray();
+
+            return $userChats;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function selectAllTeamChats(User $user): array
+    {
+        try {
+            $subQuery = DB::table('chat as c')
+                ->join('user_chat as uc', 'c.id', '=', 'uc.chat_id')
+                ->join('user as u', 'u.id', '=', 'uc.user_id')
+                ->where('u.id', $user->getId())
+                ->where('c.is_group_chat', '=', true)
+                ->select('c.id');
+
+            $userChats = DB::table('team as t')
+                ->join('chat as c', 't.chat_id', '=', 'c.id')
+                ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id')
+                ->whereIn('c.id', $subQuery)
+                ->select('c.id', 't.name', 't.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
+                ->get()
+                ->toArray();
+
+            return $userChats;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function selectAllAppointmentsChats(User $user): array
+    {
+        try {
+            $subQuery = DB::table('chat as c')
+                ->join('user_chat as uc', 'c.id', '=', 'uc.chat_id')
+                ->join('user as u', 'u.id', '=', 'uc.user_id')
+                ->where('u.id', $user->getId())
+                ->where('c.is_group_chat', '=', true)
+                ->select('c.id');
+
+            $userChats = DB::table('appointment as a')
+                ->join('chat as c', 'a.chat_id', '=', 'c.id')
+                ->join('sport_arena as sa', 'a.sport_arena_id','=', 'sa.id')
+                ->join('arena as ar', 'sa.arena_id','=', 'ar.id')
+                ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id')
+                ->whereIn('c.id', $subQuery)
+                ->select('c.id', 'ar.address', 'ar.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
                 ->get()
                 ->toArray();
 

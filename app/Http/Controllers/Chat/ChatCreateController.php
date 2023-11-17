@@ -23,7 +23,7 @@ class ChatCreateController extends Controller
             $user1 = $this->user->selectByUsername($request['username_user_1']);
             $user2 = $this->user->selectByUsername($request['username_user_2']);
             $chat_id = $this->chat->domain($user1, $user2);
-            return response()->json(['chat_id' => $chat_id], 200);
+            return response()->json(['chat_id' => $chat_id], 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

@@ -25,8 +25,10 @@ class ChatListController extends Controller
             $userDecoded = $this->autheticateToken($request["idToken"]);
             $email = $userDecoded->email;
             $user = $this->user->select($email);
-            $chats = $this->chat->selectAll($user);  
-            return response()->json($chats, 200);
+            $friendsChats = $this->chat->selectAll($user);
+            $teamsChats = $this->chat->selectAllTeamChats($user);
+            $appointmentsChats = $this->chat->selectAllAppointmentsChats($user);
+            return response()->json(['friendsChats' => $friendsChats, 'teamsChats' => $teamsChats, 'appointmentsChats' => $appointmentsChats], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

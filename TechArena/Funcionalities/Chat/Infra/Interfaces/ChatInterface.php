@@ -8,6 +8,8 @@ interface ChatInterface
 {
     public function select(User $user1, User $user2): Chat;
     public function selectAll(User $user): array;
+    public function selectAllTeamChats(User $user): array;
+    public function selectAllAppointmentsChats(User $user): array;
     public function create(): Chat;
     public function update(Chat $chat);
     public function delete(Chat $chat);
