@@ -5,9 +5,7 @@ namespace TechArena\Funcionalities\Chat;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use TechArena\Funcionalities\User\Infra\Model\User;
-use TechArena\Funcionalities\UserChat\Infra\Interfaces\ChatUserInterface;
 use TechArena\Funcionalities\Chat\Infra\Interfaces\ChatInterface;
-use TechArena\Funcionalities\Chat\Infra\Model\Chat as ChatModel;
 use TechArena\Funcionalities\UserChat\Infra\Model\UserChat as UserChatModel;
 use TechArena\Funcionalities\UserChat\UserChat;
 
@@ -24,7 +22,7 @@ class Chat
     }
     public function domain(User $user1, User $user2)
     {
-        $chatExist = $this->repositoryChat->exist($user1, $user2);
+        $chatExist = $this->repositoryChat->existUserChat($user1, $user2);
         try {
             DB::beginTransaction();
             if ($chatExist) {

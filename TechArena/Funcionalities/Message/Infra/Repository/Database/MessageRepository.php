@@ -19,7 +19,7 @@ class MessageRepository implements Base
     {
         try {
             $messageDB = DB::table('message as m')
-                ->select('m.id', 'm.message', 'm.created_at', 'm.chat_id', 'u.username')
+                ->select('m.id', 'm.message', 'm.created_at', 'm.chat_id', 'u.username', 'u.image')
                 ->join('user as u', 'u.id', '=', 'm.user_id')
                 ->where('m.chat_id', $userChat->getChatId())
                 ->orderBy('m.created_at', 'desc')
