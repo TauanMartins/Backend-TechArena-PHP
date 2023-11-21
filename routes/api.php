@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Arena\ArenaCreateController;
+use App\Http\Controllers\Arena\ArenaEditController;
 use App\Http\Controllers\Arena\ArenaListAllController;
 use App\Http\Controllers\Arena\ArenaListController;
 use App\Http\Controllers\Chat\ChatCreateController;
@@ -64,6 +65,7 @@ Route::post('/chat/team', ChatTeamCreateController::class);
 // Arena
 Route::get('/arenas', ArenaListController::class);
 Route::post('/arenas', ArenaCreateController::class);
+Route::put('/arenas', ArenaEditController::class);
 Route::get('/arenas/admin', ArenaListAllController::class);
 
 // User
