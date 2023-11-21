@@ -12,6 +12,18 @@ use TechArena\Funcionalities\Arena\Infra\Model\Arena;
 class ArenaRepository implements Base
 {
 
+    public function selectAll(): array
+    {
+        try {
+            $query = DB::table('arena')
+                ->get()
+                ->toArray();
+
+            return $query;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function select(int $id): Arena
     {
         try {

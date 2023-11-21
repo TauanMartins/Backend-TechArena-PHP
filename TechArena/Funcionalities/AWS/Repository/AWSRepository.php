@@ -2,6 +2,7 @@
 
 namespace TechArena\Funcionalities\AWS\Repository;
 
+use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
 use Symfony\Component\Mime\MimeTypes;
 use TechArena\Funcionalities\AWS\Interfaces\AWSInterface;
@@ -14,18 +15,15 @@ class AWSRepository implements AWSInterface
 
     public function __construct()
     {
+        $credentials = new Credentials(env('AWS_ACCESS_KEY_ID'), env('AWS_SECRET_ACCESS_KEY'));
+
         $this->s3Client = new S3Client([
-            'version' => 'latest',            
+            'version' => 'latest',
             'region' => env('AWS_DEFAULT_REGION'),
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            ],
-            'http' => [
-                'verify' => false,
-                // Desativa a verificação do certificado SSL
-            ],
+            'credentials' => $credentials,
+            'http' => ['verify' => false],
         ]);
+
         $this->bucketName = env('AWS_BUCKET_NAME');
     }
 
@@ -37,7 +35,6 @@ class AWSRepository implements AWSInterface
     {
         try {
             // Decodificar a imagem
-            echo($imageData);
             $binaryData = base64_decode($imageData);
             if (!$binaryData) {
                 throw new Exception('Base64 decode failed');
