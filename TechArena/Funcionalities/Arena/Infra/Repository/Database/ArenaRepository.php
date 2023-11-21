@@ -71,7 +71,15 @@ class ArenaRepository implements Base
     public function update(Arena $arena)
     {
         try {
-            return;
+            DB::table('arena', 'a')
+                ->where(['a.id' => $arena->getId()])
+                ->update([
+                    'name' => $arena->getAddress(),
+                    'lat' => $arena->getLat(),
+                    'longitude' => $arena->getLongitude(),
+                    'image' => $arena->getImage(),
+                    'is_league_only' => $arena->is_league_only(),
+                ]);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

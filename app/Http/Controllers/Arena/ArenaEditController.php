@@ -30,7 +30,8 @@ class ArenaEditController extends Controller
                 $imageUrl,
                 $request['is_league_only']
             );
-            $arenas = $this->arenas->create($arena);
+            $arena->setId($request['id']);
+            $arenas = $this->arenas->update($arena);
             return response()->json($arenas, 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
