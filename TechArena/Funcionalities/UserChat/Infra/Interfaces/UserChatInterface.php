@@ -10,6 +10,14 @@ interface UserChatInterface
     public function update(UserChat $userChat);
     public function delete(UserChat $userChat);
     public function exist(UserChat $userChat): bool;
+    public function selectTeamId(UserChat $userChat);
+    public function selectChatDetail(UserChat $userChat);
+    public function selectPrivateChatDetail(UserChat $userChat);
+    public function selectAppointmentChatDetail(UserChat $userChat);
+    public function selectAllSolicitationsForTeam(UserChat $userChat);
+    public function selectAllUsersInTeam(UserChat $userChat);
+    public function selectAllUsersInAppointment(UserChat $userChat);
+    public function isTeamChat(UserChat $userChat): bool;
     public function allowed(UserChat $userChat): bool;
 
 }

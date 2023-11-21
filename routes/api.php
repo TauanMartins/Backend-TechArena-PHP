@@ -5,7 +5,9 @@ use App\Http\Controllers\Arena\ArenaEditController;
 use App\Http\Controllers\Arena\ArenaListAllController;
 use App\Http\Controllers\Arena\ArenaListController;
 use App\Http\Controllers\Chat\ChatCreateController;
+use App\Http\Controllers\Chat\ChatGroupDetailController;
 use App\Http\Controllers\Chat\ChatListController;
+use App\Http\Controllers\Chat\ChatPrivateDetailController;
 use App\Http\Controllers\Chat\ChatTeamCreateController;
 use App\Http\Controllers\Friend\FriendCreateController;
 use App\Http\Controllers\Friend\FriendListAllController;
@@ -58,6 +60,8 @@ Route::get('/message', MessageListController::class);
 Route::post('/message', MessageCreateController::class);
 
 // Chat
+Route::get('/chat/group/detail', ChatGroupDetailController::class);
+Route::get('/chat/private/detail', ChatPrivateDetailController::class);
 Route::get('/chat', ChatListController::class);
 Route::post('/chat', ChatCreateController::class);
 Route::post('/chat/team', ChatTeamCreateController::class);

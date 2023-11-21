@@ -35,14 +35,18 @@ class TeamEditController extends Controller
             $user = $this->user->selectByUsername($request['username']);
             $team = $this->team->selectById($request['team_id']);
             if ($this->userTeam->userIsOwner(new UserTeam($user->getId(), $team->getId(), true, true))) {
-                $imageUrl = $this->s3->editImage('teams', $team->getImage() ? $team->getName() : null, $request['name'], $request['image']);
+                if ($team->getImage() !== $request['image']) {
+                    $imageUrl = $this->s3->editImage('teams', $team->getImage() ? $team->getName() : null, $request['name'], $request['image']);
+                } else {
+                    $imageUrl = $team->getImage(); // Mantém a imagem atual, já que não houve mudança
+                }
                 $newTeam = new TeamModel($request['name'], $request['description'], $imageUrl);
                 $newTeam->setId($request['team_id']);
                 $this->team->update($newTeam);
             } else {
                 throw new Exception('Você não possui permissão para alterar informações.');
             }
-            return response()->json([], 201);
+            return response()->json([], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

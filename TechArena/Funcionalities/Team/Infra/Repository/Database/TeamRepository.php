@@ -43,7 +43,7 @@ class TeamRepository implements Base
                 ->where('t.id', '=', $id)
                 ->first();
             if (!$teamData) {
-                throw new Exception('Usuário não encontrado.');
+                throw new Exception('Time não encontrado.');
             }
             $team = new Team($teamData->name, $teamData->description, $teamData->image);
             $team->setId($teamData->id);
