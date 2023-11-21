@@ -21,7 +21,8 @@ class ArenaCreateController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $imageUrl = $this->s3->insertImage('arenas', $request['name'], $request['image']);
+            $image = $request['image'];
+            $imageUrl = $this->s3->insertImage('arenas', $request['address'], $image);
             $arena = new Arena(
                 $request['address'],
                 $request['lat'],

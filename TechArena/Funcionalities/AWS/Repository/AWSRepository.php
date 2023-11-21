@@ -15,18 +15,18 @@ class AWSRepository implements AWSInterface
     public function __construct()
     {
         $this->s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => getenv('AWS_DEFAULT_REGION'),
+            'version' => 'latest',            
+            'region' => env('AWS_DEFAULT_REGION'),
             'credentials' => [
-                'key' => getenv('AWS_ACCESS_KEY_ID'),
-                'secret' => getenv('AWS_SECRET_ACCESS_KEY'),
+                'key' => env('AWS_ACCESS_KEY_ID'),
+                'secret' => env('AWS_SECRET_ACCESS_KEY'),
             ],
             'http' => [
                 'verify' => false,
                 // Desativa a verificação do certificado SSL
             ],
         ]);
-        $this->bucketName = getenv('AWS_BUCKET');
+        $this->bucketName = env('AWS_BUCKET_NAME');
     }
 
     public function getImage(string $folder, string $name)
@@ -37,6 +37,7 @@ class AWSRepository implements AWSInterface
     {
         try {
             // Decodificar a imagem
+            echo($imageData);
             $binaryData = base64_decode($imageData);
             if (!$binaryData) {
                 throw new Exception('Base64 decode failed');
