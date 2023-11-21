@@ -16,17 +16,17 @@ class AWSRepository implements AWSInterface
     {
         $this->s3Client = new S3Client([
             'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
+            'region' => getenv('AWS_DEFAULT_REGION'),
             'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                'key' => getenv('AWS_ACCESS_KEY_ID'),
+                'secret' => getenv('AWS_SECRET_ACCESS_KEY'),
             ],
             'http' => [
                 'verify' => false,
                 // Desativa a verificação do certificado SSL
             ],
         ]);
-        $this->bucketName = env('AWS_BUCKET');
+        $this->bucketName = getenv('AWS_BUCKET');
     }
 
     public function getImage(string $folder, string $name)
