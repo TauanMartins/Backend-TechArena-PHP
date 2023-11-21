@@ -22,7 +22,7 @@ class ArenaEditController extends Controller
     {
         try {
             $oldArena = $this->arenas->select($request['id']);
-            $imageUrl = $this->s3->editImage('arenas', $oldArena->getImage() ? $oldArena->getAddress() : null, $request['name'], $request['image']);
+            $imageUrl = $this->s3->editImage('arenas', $oldArena->getImage() ? $oldArena->getAddress() : null, $request['address'], $request['image']);
             $arena = new Arena(
                 $request['address'],
                 $request['lat'],

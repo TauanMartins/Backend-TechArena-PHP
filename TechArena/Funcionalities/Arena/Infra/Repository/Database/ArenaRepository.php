@@ -31,7 +31,7 @@ class ArenaRepository implements Base
                 ->where('id', '=', $id)
                 ->first();
 
-            $arena = new Arena($query['address'], $query['lat'], $query['longitude'], $query['image'], $query['is_league_only']);
+            $arena = new Arena($query->address, $query->lat, $query->longitude, $query->image, $query->is_league_only);
 
             return $arena;
         } catch (Exception $e) {
@@ -74,7 +74,7 @@ class ArenaRepository implements Base
             DB::table('arena', 'a')
                 ->where(['a.id' => $arena->getId()])
                 ->update([
-                    'name' => $arena->getAddress(),
+                    'address' => $arena->getAddress(),
                     'lat' => $arena->getLat(),
                     'longitude' => $arena->getLongitude(),
                     'image' => $arena->getImage(),
