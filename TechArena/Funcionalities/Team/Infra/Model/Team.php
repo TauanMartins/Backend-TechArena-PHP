@@ -10,21 +10,20 @@ class Team implements Arrayable
     private null|int $id;
     private string $name;
     private string $description;
-    private string $image;
+    private ?string $image;
     private DateTime $created_at;
-    private int $chat_id;
+    private null|int $chat_id;
 
     public function __construct(
         string $name,
         string $description,
-        string $image,
-        int $chat_id
+        ?string $image,
     ) {
         $this->id = null;
         $this->name = $name;
         $this->description = $description;
         $this->image = $image;
-        $this->chat_id = $chat_id;
+        $this->chat_id = null;
         $this->created_at = new DateTime();
     }
 
@@ -35,6 +34,10 @@ class Team implements Arrayable
     public function setCreatedAt(DateTime $created_at): void
     {
         $this->created_at = $created_at;
+    }
+    public function setChatId(int $chat_id): void
+    {
+        $this->chat_id = $chat_id;
     }
     public function getId(): null|int
     {
@@ -50,7 +53,7 @@ class Team implements Arrayable
     {
         return $this->description;
     }
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
@@ -71,7 +74,7 @@ class Team implements Arrayable
             'name' => $this->name,
             'description' => $this->description,
             'image' => $this->image,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),            
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'chat_id' => $this->chat_id,
         ];
     }
@@ -81,8 +84,7 @@ class Team implements Arrayable
         return new self(
             $data['name'],
             $data['description'],
-            $data['image'],
-            $data['chat_id']
+            $data['image'] ?? null
         );
     }
 }

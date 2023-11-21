@@ -8,13 +8,16 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use TechArena\Funcionalities\User\Infra\Interfaces\UserInterface;
+use TechArena\Funcionalities\UserTeam\Infra\Interfaces\UserTeamInterface;
 
 class UserTeamListAllController extends Controller
 {
     private UserInterface $user;
-    public function __construct(UserInterface $user)
+    private UserTeamInterface $userTeam;
+    public function __construct(UserInterface $user, UserTeamInterface $userTeam)
     {
         $this->user = $user;
+        $this->userTeam = $userTeam;
     }
     public function __invoke(Request $request)
     {
@@ -22,8 +25,10 @@ class UserTeamListAllController extends Controller
             $userDecoded = $this->autheticateToken($request["idToken"]);
             $email = $userDecoded->email;
             $user = $this->user->select($email);
-            $teams = $this->user->selectUserTeams($user);
-            return response()->json(['teams' => $teams], 200);
+            $teams = $this->userTeam->selectUserTeams($user);
+            $received_teams = $this->userTeam->selectReceived($user);
+            $requested_teams = $this->userTeam->selectRequested($user);
+            return response()->json(['teams' => $teams, 'received_teams'=>$received_teams, 'requested_teams'=>$requested_teams], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

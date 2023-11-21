@@ -4,6 +4,12 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\AWS\Interfaces\AWSInterface;
+use TechArena\Funcionalities\AWS\Repository\AWSRepository as AWSRepositoryConcretely;
+
+use TechArena\Funcionalities\UserTeam\Infra\Interfaces\UserTeamInterface;
+use TechArena\Funcionalities\UserTeam\Infra\Repository\Database\UserTeamRepository as UserTeamRepositoryConcretely;
+
 use TechArena\Funcionalities\Team\Infra\Interfaces\TeamInterface;
 use TechArena\Funcionalities\Team\Infra\Repository\Database\TeamRepository as TeamRepositoryConcretely;
 
@@ -43,6 +49,8 @@ use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as Us
 class ServiceProvider extends Base
 {
     public $bindings = [
+        UserTeamInterface::class => UserTeamRepositoryConcretely::class,
+        AWSInterface::class => AWSRepositoryConcretely::class,
         TeamInterface::class => TeamRepositoryConcretely::class,
         FriendInterface::class => FriendRepositoryConcretely::class,
         MessageInterface::class => MessageRepositoryConcretely::class,

@@ -4,19 +4,20 @@ namespace TechArena\Funcionalities\UserChat;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use TechArena\Funcionalities\User\Infra\Interfaces\UserInterface;
 use TechArena\Funcionalities\Team\Infra\Model\Team;
 use TechArena\Funcionalities\UserChat\Infra\Model\UserChat as UserChatModel;
 use TechArena\Funcionalities\User\Infra\Model\User;
 use TechArena\Funcionalities\UserChat\Infra\Interfaces\UserChatInterface;
+use TechArena\Funcionalities\UserTeam\Infra\Interfaces\UserTeamInterface;
+use TechArena\Funcionalities\UserTeam\Infra\Model\UserTeam;
 
 class UserTeamChat
 {
-    private UserInterface $repositoryUser;
+    private UserTeamInterface $repositoryUser;
     private UserChatInterface $repositoryUserChat;
     public function __construct(
         UserChatInterface $repositoryUserChat,
-        UserInterface $repositoryUser
+        UserTeamInterface $repositoryUser
     ) {
         $this->repositoryUserChat = $repositoryUserChat;
         $this->repositoryUser = $repositoryUser;
@@ -27,7 +28,7 @@ class UserTeamChat
         // verificar se existe o user_chat ligando o cara para aquele chat_id do time
         // se sim, retornar o chat_id
         // se não, criar o user_chat do cara para aquele chat_id do time
-        $allowed = $this->repositoryUser->allowedUserInTeam($user, $team);
+        $allowed = $this->repositoryUser->allowedUserInTeam(new UserTeam($user->getId(), $team->getId(), true, true));
 
         try {
             DB::beginTransaction();
@@ -42,6 +43,7 @@ class UserTeamChat
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+            throw new Exception($e->getMessage());
         }
 
     }

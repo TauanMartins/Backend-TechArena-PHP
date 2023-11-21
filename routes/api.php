@@ -12,9 +12,17 @@ use App\Http\Controllers\HealthCheck\StatusController;
 use App\Http\Controllers\Message\MessageListController;
 use App\Http\Controllers\Message\MessageCreateController;
 use App\Http\Controllers\Preference\UserPreferedThemeController;
+use App\Http\Controllers\Team\TeamEditController;
+use App\Http\Controllers\Team\TeamExistController;
+use App\Http\Controllers\Team\TeamListAllController;
+use App\Http\Controllers\Team\TeamCreateController;
+use App\Http\Controllers\Team\TeamOwnerAcceptRequestController;
+use App\Http\Controllers\Team\TeamOwnerRequestController;
 use App\Http\Controllers\User\UserAuthController;
 use App\Http\Controllers\User\UsersListAllController;
+use App\Http\Controllers\User\UserTeamAcceptRequestController;
 use App\Http\Controllers\User\UserTeamListAllController;
+use App\Http\Controllers\User\UserTeamRequestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +39,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health-check', StatusController::class);
 
 // Team
-
+Route::get('/team', TeamListAllController::class);
+Route::get('/team/exist', TeamExistController::class);
+Route::post('/team', TeamCreateController::class);
+Route::put('/team', TeamEditController::class);
+Route::post('/team/user', TeamOwnerRequestController::class); // dono convida membro
+Route::put('/team/user', TeamOwnerAcceptRequestController::class); // dono aceita membro
 
 // Friend
 Route::get('/friend', FriendListAllController::class);
@@ -54,6 +67,8 @@ Route::post('/arenas', ArenaCreateController::class);
 // User
 Route::get('/users', UsersListAllController::class);
 Route::get('/users/team', UserTeamListAllController::class);
+Route::post('/users/team', UserTeamRequestController::class); // membro solicita ingresso
+Route::put('/users/team', UserTeamAcceptRequestController::class); // membro aceita solicitação
 Route::post('/users', UserAuthController::class);
 Route::post('/users/admin', UserAuthController::class);
 

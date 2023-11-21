@@ -30,6 +30,10 @@ jobs:
         sed -i 's/^PUSHER_SCHEME=.*/PUSHER_SCHEME="${{ secrets.PUSHER_SCHEME }}"/g' .env
         sed -i 's/^PUSHER_HOST=.*/PUSHER_HOST="${{ secrets.PUSHER_HOST }}"/g' .env
         sed -i 's/^PUSHER_PORT=.*/PUSHER_PORT="${{ secrets.PUSHER_PORT }}"/g' .env
+        sed -i 's/^AWS_ACCESS_KEY_ID=.*/AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"/g' .env
+        sed -i 's/^AWS_SECRET_ACCESS_KEY=.*/AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"/g' .env
+        sed -i 's/^AWS_DEFAULT_REGION=.*/AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}"/g' .env
+        sed -i 's/^AWS_BUCKET=.*/AWS_BUCKET="${{ secrets.AWS_BUCKET }}"/g' .env
     - name: Build the Docker image
       run: |
         docker build -f ./.devops/php/Dockerfile -t backend .

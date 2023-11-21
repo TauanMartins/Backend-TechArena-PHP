@@ -12,7 +12,7 @@ interface ChatInterface
     public function selectAll(User $user): array;
     public function selectAllTeamChats(User $user): array;
     public function selectAllAppointmentsChats(User $user): array;
-    public function create(): Chat;
+    public function create(bool $is_group_chat = false): Chat;
     public function update(Chat $chat);
     public function delete(Chat $chat);
     public function existUserChat(User $user1, User $user2): bool;

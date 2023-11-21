@@ -12,6 +12,20 @@ use TechArena\Funcionalities\Arena\Infra\Model\Arena;
 class ArenaRepository implements Base
 {
 
+    public function select(int $id): Arena
+    {
+        try {
+            $query = DB::table('arena')
+                ->where('id', '=', $id)
+                ->first();
+
+            $arena = new Arena($query['address'], $query['lat'], $query['longitude'], $query['image'], $query['is_league_only']);
+
+            return $arena;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function selectByFilters(array $filters): array
     {
         try {
@@ -19,9 +33,9 @@ class ArenaRepository implements Base
 
             if (isset($filters['address'])) {
                 $query->where('address', 'LIKE', '%' . $filters['address'] . '%');
-                unset($filters['address']); 
+                unset($filters['address']);
             }
-    
+
             // Aplique os outros filtros
             foreach ($filters as $key => $value) {
                 $query->where($key, $value);

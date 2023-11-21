@@ -9,7 +9,7 @@ use TechArena\Funcionalities\Arena\Infra\Interfaces\ArenaInterface;
 use TechArena\Funcionalities\Arena\Infra\Model\Arena;
 use TechArena\Funcionalities\AWS\Interfaces\AWSInterface;
 
-class ArenaCreateController extends Controller
+class ArenaEditController extends Controller
 {
     private ArenaInterface $arenas;
     private AWSInterface $s3;
@@ -21,7 +21,8 @@ class ArenaCreateController extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $imageUrl = $this->s3->insertImage('arenas', $request['name'], $request['image']);
+            $oldArena = $this->arenas->select($request['id']);
+            $imageUrl = $this->s3->editImage('arenas', $oldArena->getImage() ? $oldArena->getAddress() : null, $request['name'], $request['image']);
             $arena = new Arena(
                 $request['address'],
                 $request['lat'],

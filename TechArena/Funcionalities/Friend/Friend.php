@@ -17,9 +17,15 @@ class Friend
     }
     public function domain(FriendModel $friendModel)
     {
+
         $friendshipExist = $this->friendInterface->exist($friendModel);
-        if (!$friendshipExist) {
-            $this->friendInterface->create($friendModel);
+        try {
+            if (!$friendshipExist) {
+                $this->friendInterface->create($friendModel);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
         }
     }
 }

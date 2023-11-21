@@ -106,9 +106,10 @@ class ChatRepository implements Base
                 ->join('chat as c', 'a.chat_id', '=', 'c.id')
                 ->join('sport_arena as sa', 'a.sport_arena_id', '=', 'sa.id')
                 ->join('arena as ar', 'sa.arena_id', '=', 'ar.id')
+                ->join('schedule as s', 's.id', '=', 'a.schedule_id')
                 ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id')
                 ->whereIn('c.id', $subQuery)
-                ->select('c.id', 'ar.address', 'ar.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
+                ->select('c.id', DB::raw('ar.address|| \' - \'||  to_char(a.date, \'DD/MM/YYYY\')|| \' - \' || s.horary as name'), 'ar.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
                 ->get()
                 ->toArray();
 
@@ -117,10 +118,11 @@ class ChatRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
-    public function create(): Chat
+    public function create(bool $is_group_chat = false): Chat
     {
         try {
             $chat = new Chat();
+            $chat->setIsGroupChat($is_group_chat);
             $id = DB::table('chat')->insertGetId($chat->toArrayInsert());
             $chat->setId($id);
             return $chat;

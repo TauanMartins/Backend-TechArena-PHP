@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id()->comment('Identificador único para a equipe');
             $table->string('name', 45)->comment('Nome da equipe');
             $table->text('description')->nullable()->comment('Descrição da equipe');
-            $table->bigInteger('team_number')->comment('Número identificador da equipe');
-            $table->string('image', 150)->nullable()->comment('Caminho da imagem da equipe');            
+            $table->string('image')->nullable()->comment('URL da imagem da equipe');         
             $table->dateTime('created_at')->comment('Data e hora de criação do registro.');
             $table->foreignId('chat_id')->constrained('chat')->comment('Referência ao chat do agendamento');
         });

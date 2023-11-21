@@ -15,7 +15,6 @@ use TechArena\Funcionalities\Permission\Infra\Interfaces\PermissionInterface;
 
 class UserRepository implements Base
 {
-
     public function select(string $email): User
     {
         try {
@@ -69,7 +68,7 @@ class UserRepository implements Base
         try {
             $users = DB::table('user')
                 ->select('id', 'name', 'username', 'image')
-                ->where('username', 'like', '%' . strtolower($username) . '%')
+                ->whereRaw('LOWER(username) LIKE ?', ['%' . strtolower($username) . '%'])
                 ->get()
                 ->toArray();
             return $users;
@@ -77,36 +76,6 @@ class UserRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
-    public function selectUserTeams(User $user): array
-    {
-        try {
-            $users = DB::table('team as t')
-                ->select('t.id', 't.name', 't.description', 't.image', 't.chat_id', 'ut.leader')
-                ->join('user_team as ut', 'ut.team_id', '=', 't.id')
-                ->join('user as u', 'u.id', '=', 'ut.user_id')
-                ->where('u.id', '=', $user->getId())
-                ->get()
-                ->toArray();
-            return $users;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-    public function allowedUserInTeam(User $user, Team $team): bool
-    {
-        try {
-            $users = DB::table('team as t')
-                ->join('user_team as ut', 'ut.team_id', '=', 't.id')
-                ->join('user as u', 'u.id', '=', 'ut.user_id')
-                ->where('ut.user_id', '=', $user->getId())
-                ->where('ut.team_id', '=', $team->getId())
-                ->exists();
-            return $users;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
     public function create(User $user)
     {
         try {
