@@ -15,16 +15,16 @@ class AWSRepository implements AWSInterface
 
     public function __construct()
     {
-        $credentials = new Credentials(env('AWS_ACCESS_KEY_ID'), env('AWS_SECRET_ACCESS_KEY'));
+        $credentials = new Credentials('AKIATAJ3TV5UMQPROUD4', '0YUKazevVhGUk6qlN5PEI5jMf/JWedm3yZwbXQXA');
 
         $this->s3Client = new S3Client([
             'version' => 'latest',
-            'region' => env('AWS_DEFAULT_REGION'),
+            'region' => "sa-east-1",
             'credentials' => $credentials,
             'http' => ['verify' => false],
         ]);
 
-        $this->bucketName = env('AWS_BUCKET_NAME');
+        $this->bucketName = 'bucket-techarena';
     }
 
     public function getImage(string $folder, string $name)
