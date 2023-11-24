@@ -22,24 +22,30 @@ class ChatRepository implements Base
         try {
             $user1Chats = DB::table('user_chat as uc1')
                 ->select('uc1.chat_id')
-                ->where('uc1.user_id', $user1->getId());
+                ->leftJoin('appointment as a1', 'uc1.chat_id', '=', 'a1.chat_id')
+                ->leftJoin('team as t1', 'uc1.chat_id', '=', 't1.chat_id')
+                ->where('uc1.user_id', $user1->getId())
+                ->whereNull('a1.id')
+                ->whereNull('t1.id');
 
-            // Subconsulta para chats do usuário 2
             $user2Chats = DB::table('user_chat as uc2')
                 ->select('uc2.chat_id')
-                ->where('uc2.user_id', $user2->getId());
+                ->leftJoin('appointment as a2', 'uc2.chat_id', '=', 'a2.chat_id')
+                ->leftJoin('team as t2', 'uc2.chat_id', '=', 't2.chat_id')
+                ->where('uc2.user_id', $user2->getId())
+                ->whereNull('a2.id')
+                ->whereNull('t2.id');
 
-            // Busca pelo chat_id que está presente em ambas as subconsultas
-            $chatId = DB::table('chat as c')
+            $chatRecord = DB::table('chat as c')
                 ->joinSub($user1Chats, 'user1_chats', function ($join) {
                     $join->on('c.id', '=', 'user1_chats.chat_id');
                 })
                 ->joinSub($user2Chats, 'user2_chats', function ($join) {
                     $join->on('c.id', '=', 'user2_chats.chat_id');
                 })
-                ->first(['c.id']); // Seleciona apenas os registros distintos
+                ->first();
             $chat = Chat::fromArray();
-            $chat->setId($chatId->id);
+            $chat->setId($chatRecord->id);
             return $chat;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -111,7 +117,7 @@ class ChatRepository implements Base
                 ->join('arena as ar', 'sa.arena_id', '=', 'ar.id')
                 ->join('schedule as s', 's.id', '=', 'a.schedule_id')
                 ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id')
-                ->whereIn('c.id', $subQuery)                
+                ->whereIn('c.id', $subQuery)
                 ->whereRaw("CONCAT(a.date, ' ', s.horary)::timestamp > ?", [$currentDateTime])
                 ->select('c.id', DB::raw('ar.address|| \' - \'||  to_char(a.date, \'DD/MM/YYYY\')|| \' - \' || s.horary as name'), 'ar.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
                 ->get()
@@ -155,14 +161,20 @@ class ChatRepository implements Base
         try {
             $user1Chats = DB::table('user_chat as uc1')
                 ->select('uc1.chat_id')
-                ->where('uc1.user_id', $user1->getId());
+                ->where('uc1.user_id', $user1->getId())
+                ->leftJoin('appointment as a', 'uc1.chat_id', '=', 'a.chat_id')
+                ->leftJoin('team as t', 'uc1.chat_id', '=', 't.chat_id')
+                ->whereNull('a.id')
+                ->whereNull('t.id');
 
-            // Subconsulta para chats do usuário 2
             $user2Chats = DB::table('user_chat as uc2')
                 ->select('uc2.chat_id')
-                ->where('uc2.user_id', $user2->getId());
+                ->where('uc2.user_id', $user2->getId())
+                ->leftJoin('appointment as a', 'uc2.chat_id', '=', 'a.chat_id')
+                ->leftJoin('team as t', 'uc2.chat_id', '=', 't.chat_id')
+                ->whereNull('a.id')
+                ->whereNull('t.id');
 
-            // Verifica se existe algum chat_id que está presente em ambas as subconsultas
             $exists = DB::table('chat as c')
                 ->joinSub($user1Chats, 'user1_chats', function ($join) {
                     $join->on('c.id', '=', 'user1_chats.chat_id');
@@ -177,6 +189,7 @@ class ChatRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
+
     public function existAppointmentChat(Appointment $appointment): bool
     {
         try {
