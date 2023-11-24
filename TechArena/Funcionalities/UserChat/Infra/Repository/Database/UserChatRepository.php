@@ -215,8 +215,8 @@ class UserChatRepository implements Base
                         ->where('f2.user_2_accepted', true);
                 })
                 ->select(
-                    'u.id',
-                    'u.name',
+                    'u.id',                    
+                    DB::raw('CASE WHEN ua.holder IS true THEN u.name || \' - Holder\' ELSE u.name END as name'),
                     'u.username',
                     'u.image',
                     DB::raw('CASE WHEN f1.user_2_id IS NOT NULL OR f2.user_1_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_friend')
