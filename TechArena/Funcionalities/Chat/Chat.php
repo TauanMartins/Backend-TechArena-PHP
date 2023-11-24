@@ -40,6 +40,7 @@ class Chat
             return $chatId->getId();
         } catch (Exception $e) {
             DB::rollBack();
+            throw new Exception($e->getMessage());
         }
     }
 }

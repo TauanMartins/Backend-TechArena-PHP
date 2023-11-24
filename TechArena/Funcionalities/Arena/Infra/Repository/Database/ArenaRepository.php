@@ -60,6 +60,35 @@ class ArenaRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
+    public function selectBySport(int $sport_id): array
+    {
+        try {
+            $arenas = DB::table('arena a')
+                ->join('sport_arena as sa', 'sa.arena_id', '=', 'a.id')
+                ->where('sport_id', '=', $sport_id)
+                ->get()
+                ->toArray();
+
+
+            return $arenas;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function selectSpecificBySport(int $sport_id, int $arena_id): int
+    {
+        try {
+            return DB::table('arena as a')
+                ->select('sa.id')
+                ->join('sport_arena as sa', 'sa.arena_id', '=', 'a.id')
+                ->where('sa.sport_id', '=', $sport_id)
+                ->where('sa.arena_id', '=', $arena_id)
+                ->first()
+                ->id;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
     public function create(Arena $arena)
     {
         try {

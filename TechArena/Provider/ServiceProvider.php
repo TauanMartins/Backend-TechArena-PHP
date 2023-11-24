@@ -4,6 +4,18 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\UserAppointment\Infra\Interfaces\UserAppointmentInterface;
+use TechArena\Funcionalities\UserAppointment\Infra\Repository\Database\UserAppointmentRepository as UserAppointmentRepositoryConcretely;
+
+use TechArena\Funcionalities\Appointment\Infra\Interfaces\AppointmentInterface;
+use TechArena\Funcionalities\Appointment\Infra\Repository\Database\AppointmentRepository as AppointmentRepositoryConcretely;
+
+use TechArena\Funcionalities\SportPrefered\Infra\Interfaces\SportPreferedInterface;
+use TechArena\Funcionalities\SportPrefered\Infra\Repository\Database\SportPreferedRepository as SportPreferedRepositoryConcretely;
+
+use TechArena\Funcionalities\Sport\Infra\Interfaces\SportInterface;
+use TechArena\Funcionalities\Sport\Infra\Repository\Database\SportRepository as SportRepositoryConcretely;
+
 use TechArena\Funcionalities\AWS\Interfaces\AWSInterface;
 use TechArena\Funcionalities\AWS\Repository\AWSRepository as AWSRepositoryConcretely;
 
@@ -49,6 +61,10 @@ use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as Us
 class ServiceProvider extends Base
 {
     public $bindings = [
+        UserAppointmentInterface::class => UserAppointmentRepositoryConcretely::class,
+        AppointmentInterface::class => AppointmentRepositoryConcretely::class,
+        SportPreferedInterface::class => SportPreferedRepositoryConcretely::class,
+        SportInterface::class => SportRepositoryConcretely::class,
         UserTeamInterface::class => UserTeamRepositoryConcretely::class,
         AWSInterface::class => AWSRepositoryConcretely::class,
         TeamInterface::class => TeamRepositoryConcretely::class,

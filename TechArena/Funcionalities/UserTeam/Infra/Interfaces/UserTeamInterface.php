@@ -3,6 +3,7 @@
 namespace TechArena\Funcionalities\UserTeam\Infra\Interfaces;
 
 use TechArena\Funcionalities\User\Infra\Model\User;
+use TechArena\Funcionalities\UserAppointment\Infra\Model\UserAppointment;
 use TechArena\Funcionalities\UserTeam\Infra\Model\UserTeam;
 
 interface UserTeamInterface

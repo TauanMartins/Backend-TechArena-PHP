@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 
 use TechArena\Funcionalities\Team\Infra\Model\Team;
+use TechArena\Funcionalities\UserAppointment\Infra\Model\UserAppointment;
 use TechArena\Funcionalities\UserTeam\Infra\Interfaces\UserTeamInterface as Base;
 use TechArena\Funcionalities\User\Infra\Model\User;
 use TechArena\Funcionalities\UserTeam\Infra\Model\UserTeam as UserTeamModel;
@@ -93,6 +94,7 @@ class UserTeamRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
+    
     public function allowedUserInTeam(UserTeamModel $userTeam): bool
     {
         try {

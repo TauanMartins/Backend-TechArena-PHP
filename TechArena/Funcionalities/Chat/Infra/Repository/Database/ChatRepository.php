@@ -8,6 +8,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 
+use TechArena\Funcionalities\Appointment\Infra\Model\Appointment;
 use TechArena\Funcionalities\Chat\Infra\Interfaces\ChatInterface as Base;
 use TechArena\Funcionalities\Chat\Infra\Model\Chat;
 use TechArena\Funcionalities\Team\Infra\Model\Team;
@@ -95,6 +96,8 @@ class ChatRepository implements Base
     public function selectAllAppointmentsChats(User $user): array
     {
         try {
+            $currentDateTime = new DateTime();
+            $currentDateTime = $currentDateTime->format('Y-m-d H:i:s');
             $subQuery = DB::table('chat as c')
                 ->join('user_chat as uc', 'c.id', '=', 'uc.chat_id')
                 ->join('user as u', 'u.id', '=', 'uc.user_id')
@@ -108,7 +111,8 @@ class ChatRepository implements Base
                 ->join('arena as ar', 'sa.arena_id', '=', 'ar.id')
                 ->join('schedule as s', 's.id', '=', 'a.schedule_id')
                 ->leftJoin('message as m', 'c.last_message_id', '=', 'm.id')
-                ->whereIn('c.id', $subQuery)
+                ->whereIn('c.id', $subQuery)                
+                ->whereRaw("CONCAT(a.date, ' ', s.horary)::timestamp > ?", [$currentDateTime])
                 ->select('c.id', DB::raw('ar.address|| \' - \'||  to_char(a.date, \'DD/MM/YYYY\')|| \' - \' || s.horary as name'), 'ar.image', DB::raw('CASE WHEN LENGTH(m.message) > 25 THEN SUBSTRING(m.message FROM 1 FOR 25) || \'...\' ELSE m.message END as last_message'))
                 ->get()
                 ->toArray();
@@ -168,6 +172,18 @@ class ChatRepository implements Base
                 })
                 ->exists();
 
+            return $exists;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+    public function existAppointmentChat(Appointment $appointment): bool
+    {
+        try {
+            $exists = DB::table('chat as c')
+                ->join('appointment as a', 'a.chat_id', '=', 'c.id')
+                ->where('a.chat_id', $appointment->getChatId())
+                ->exists();
             return $exists;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

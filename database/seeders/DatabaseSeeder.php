@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PreferenceSeeder::class,
             PermissionSeeder::class,
             ScheduleSeeder::class,
+            SportSeeder::class
         ]);
 
     }
