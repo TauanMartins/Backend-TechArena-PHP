@@ -20,15 +20,19 @@ class AppointmentsListAllController extends Controller
     public function __invoke(Request $request)
     {
 
-        $cursor = $request->input('cursor', null);
+        $page = $request->input('page', 1);
+        $lat = $request->input('lat');
+        $longitude = $request->input('longitude');
+        $user = $this->user->selectByUsername($request->input('username'));
+        $preferSports = $request->input('preferSports', false); // novo parâmetro
+        $orderByTime = $request->input('orderByTime', 'recent'); // novo parâmetro: 'recent' ou 'future'
+        $distance = $request->input('distance', 'near'); // novo parâmetro: 'recent' ou 'future'
+
         try {
-            $lat = $request['lat'];
-            $longitude = $request['longitude'];
-            $user = $this->user->selectByUsername($request['username']);
-            if ($request['filter']) {
-                $appointments = $this->appointment->select($user, $lat, $longitude, $cursor);
+            if ($preferSports) {
+                $appointments = $this->appointment->select($user, $lat, $longitude, $page, $orderByTime, $distance);
             } else {
-                $appointments = $this->appointment->selectAll($user, $lat, $longitude, $cursor);
+                $appointments = $this->appointment->selectAll($user, $lat, $longitude, $page, $orderByTime, $distance);
             }
             return response()->json($appointments, 200);
         } catch (Exception $e) {

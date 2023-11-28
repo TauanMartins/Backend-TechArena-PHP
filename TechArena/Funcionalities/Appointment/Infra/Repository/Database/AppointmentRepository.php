@@ -12,15 +12,14 @@ use TechArena\Funcionalities\User\Infra\Model\User;
 class AppointmentRepository implements Base
 {
 
-    public function select(User $user, string $lat, string $longitude, $cursor): array
+    public function select(User $user, string $lat, string $longitude, int $page, string $orderByTime, string $distance): array
     {
         try {
             $earthRadius = 6371; // Raio da Terra em quilômetros
-
             $userId = $user->getId();
             $currentDateTime = new DateTime();
             $currentDateTime = $currentDateTime->format('Y-m-d H:i:s');
-            // Obter esportes preferidos
+
             $preferedSports = DB::table('prefered_sports', 'ps')
                 ->select('s.id')
                 ->join('sport as s', 'ps.sport_id', '=', 's.id')
@@ -28,7 +27,6 @@ class AppointmentRepository implements Base
                 ->pluck('s.id')
                 ->toArray();
 
-            // Gerar uma string SQL para a pontuação de preferência se houver esportes preferidos
             $preferenceScore = "";
             if (!empty($preferedSports)) {
                 $preferenceScore = ", CASE s.id ";
@@ -39,7 +37,7 @@ class AppointmentRepository implements Base
             }
 
             $appointments = DB::table('appointment as ap')
-                ->select(DB::raw("                
+                ->select(DB::raw("
                 ap.id,
                 u.username,
                 ar.image,
@@ -68,26 +66,31 @@ class AppointmentRepository implements Base
                 ->join('user as u', 'u.id', '=', 'ap.organizer_id')
                 ->whereRaw("CONCAT(ap.date, ' ', sc.horary)::timestamp > ?", [$currentDateTime]);
 
-            // Ordenar baseado na existência de esportes preferidos
             if (!empty($preferedSports)) {
-                $appointments = $appointments->orderByRaw('preferenceScore DESC, distance ASC, date ASC');
-            } else {
-                $appointments = $appointments->orderBy('distance', 'asc')->orderBy('date', 'asc');
+                $appointments = $appointments->orderByRaw('preferenceScore DESC');
             }
 
-            return $appointments->cursorPaginate(10, ['*'], 'cursor', $cursor)->toArray();
+            $orderByDistance = $distance === 'near' ? 'asc' : 'desc';
+            $appointments = $appointments->orderBy('distance', $orderByDistance);
+
+            $orderByDate = $orderByTime === 'recent' ? 'asc' : 'desc';
+            $appointments = $appointments->orderBy('ap.date', $orderByDate);
+
+            $perPage = 10; // Definir o número de itens por página
+            return $appointments->paginate($perPage, ['*'], 'page', $page)->toArray();
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
-    public function selectAll(User $user, string $lat, string $longitude, $cursor): array
+    public function selectAll(User $user, string $lat, string $longitude, int $page, string $orderByTime, string $distance): array
     {
         try {
-
+            $earthRadius = 6371; // Raio da Terra em quilômetros
             $userId = $user->getId();
             $currentDateTime = new DateTime();
             $currentDateTime = $currentDateTime->format('Y-m-d H:i:s');
-            $earthRadius = 6371; // Raio da Terra em quilômetros
+
+            // Consulta principal
             $appointments = DB::table('appointment as ap')
                 ->select(DB::raw("
                 ap.id,
@@ -109,23 +112,31 @@ class AppointmentRepository implements Base
                     FROM user_appointment AS ua
                     WHERE ua.appointment_id = ap.id AND ua.user_id = $userId
                 ) AS is_inside
-                "))
+            "))
                 ->join('sport_arena as sa', 'ap.sport_arena_id', '=', 'sa.id')
                 ->join('sport as s', 'sa.sport_id', '=', 's.id')
                 ->join('arena as ar', 'ar.id', '=', 'sa.arena_id')
                 ->join('schedule as sc', 'sc.id', '=', 'ap.schedule_id')
                 ->join('user as u', 'u.id', '=', 'ap.organizer_id')
-                ->whereRaw("CONCAT(ap.date, ' ', sc.horary)::timestamp > ?", [$currentDateTime])
-                ->orderBy('distance', 'asc')
-                ->orderBy('date', 'asc')
-                ->cursorPaginate(10, ['*'], 'cursor', $cursor)
-                ->toArray();
+                ->whereRaw("CONCAT(ap.date, ' ', sc.horary)::timestamp > ?", [$currentDateTime]);
 
-            return $appointments;
+            // Ordenação por tempo
+            $orderByDate = $orderByTime === 'recent' ? 'asc' : 'desc';
+            $appointments = $appointments->orderBy('ap.date', $orderByDate);
+
+            // Ordenação por distância
+            $orderByDistance = $distance === 'near' ? 'asc' : 'desc';
+            $appointments = $appointments->orderBy('distance', $orderByDistance);
+
+            // Paginação
+            $perPage = 10; // Número de itens por página
+            return $appointments->paginate($perPage, ['*'], 'page', $page)->toArray();
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
+
+
     public function selectById(int $id): Appointment
     {
         try {
