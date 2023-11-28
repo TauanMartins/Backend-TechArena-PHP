@@ -92,7 +92,9 @@ class ArenaRepository implements Base
     public function create(Arena $arena)
     {
         try {
-            DB::table('arena')->insert($arena->toArray());
+            $id = DB::table('arena')->insertGetId($arena->toArray());
+            $arena->setId($id);
+            return $arena;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

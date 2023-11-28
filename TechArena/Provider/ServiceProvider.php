@@ -4,6 +4,9 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\SportArena\Infra\Interfaces\SportArenaInterface;
+use TechArena\Funcionalities\SportArena\Infra\Repository\Database\SportArenaRepository as SportArenaRepositoryConcretely;
+
 use TechArena\Funcionalities\UserAppointment\Infra\Interfaces\UserAppointmentInterface;
 use TechArena\Funcionalities\UserAppointment\Infra\Repository\Database\UserAppointmentRepository as UserAppointmentRepositoryConcretely;
 
@@ -61,6 +64,7 @@ use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as Us
 class ServiceProvider extends Base
 {
     public $bindings = [
+        SportArenaInterface::class => SportArenaRepositoryConcretely::class,
         UserAppointmentInterface::class => UserAppointmentRepositoryConcretely::class,
         AppointmentInterface::class => AppointmentRepositoryConcretely::class,
         SportPreferedInterface::class => SportPreferedRepositoryConcretely::class,

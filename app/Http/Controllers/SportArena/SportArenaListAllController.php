@@ -5,20 +5,20 @@ namespace App\Http\Controllers\SportArena;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
-use TechArena\Funcionalities\Arena\Infra\Interfaces\ArenaInterface;
+use TechArena\Funcionalities\SportArena\Infra\Interfaces\SportArenaInterface;
 
 class SportArenaListAllController extends Controller
 {
-    private ArenaInterface $arenas;
-    public function __construct(ArenaInterface $arenas)
+    private SportArenaInterface $sportArena;
+    public function __construct(SportArenaInterface $sportArena)
     {
-        $this->arenas = $arenas;
+        $this->sportArena = $sportArena;
     }
     public function __invoke(Request $request)
     {
         try {
-            $arenas = $this->arenas->selectAll();
-            return response()->json($arenas, 200);
+            $sportArenas = $this->sportArena->select($request['arena_id']);
+            return response()->json($sportArenas, 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

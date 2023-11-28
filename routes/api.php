@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Appointments\AppointmentsCreateController;
 use App\Http\Controllers\Appointments\AppointmentsListAllController;
+use App\Http\Controllers\SportArena\SportArenaListAllController;
 use App\Http\Controllers\SportMaterial\SportMaterialListAllController;
 use App\Http\Controllers\User\UserAppointmentRequestController;
 use App\Http\Controllers\Arena\ArenaCreateController;
@@ -57,6 +58,7 @@ Route::post('/appointments', AppointmentsCreateController::class);
 
 // Sports
 Route::get('/sports', SportListAllController::class);
+Route::get('/sports/arena', SportArenaListAllController::class);
 Route::get('/sports/material', SportMaterialListAllController::class);
 
 // Team
