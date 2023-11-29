@@ -27,7 +27,11 @@ class ArenaEditController extends Controller
     {
         try {
             $oldArena = $this->arenas->select($request['id']);
-            $imageUrl = $this->s3->editImage('arenas', $oldArena->getImage() ? $oldArena->getAddress() : null, $request['address'], $request['image']);
+            if ($oldArena->getImage() !== $request['image']) {
+                $imageUrl = $this->s3->editImage('arenas', $oldArena->getImage() ? $oldArena->getAddress() : null, $request['address'], $request['image']);
+            } else {
+                $imageUrl = $oldArena->getImage(); // Mantém a imagem atual, já que não houve mudança
+            }
             $arena = new Arena(
                 $request['address'],
                 $request['lat'],
