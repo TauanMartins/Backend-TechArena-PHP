@@ -32,6 +32,16 @@ class ArenaEditController extends Controller
             } else {
                 $imageUrl = $oldArena->getImage(); // Mantém a imagem atual, já que não houve mudança
             }
+            $existingSports = $this->sportArena->select($oldArena->getId());            
+            $possibleSports = $request['sports'];
+            $existingSportIds = array_column($existingSports, 'id');
+
+            // Identificar esportes para adicionar
+            $sportsToAdd = array_diff($possibleSports, $existingSportIds);
+
+            // Identificar esportes para remover
+            $sportsToRemove = array_diff($existingSportIds, $possibleSports);
+
             $arena = new Arena(
                 $request['address'],
                 $request['lat'],
@@ -40,14 +50,16 @@ class ArenaEditController extends Controller
                 $request['is_league_only']
             );
             $arena->setId($request['id']);
-            $sports = $request['sports'];
             DB::beginTransaction();
             try {
                 $arenas = $this->arenas->update($arena);
-                $this->sportArena->delete($arena);
-                foreach ($sports as $sport) {
+                foreach ($sportsToAdd as $sport) {
                     $sport = new SportArena($sport, $arena->getId());
                     $this->sportArena->create($sport);
+                }
+                foreach ($sportsToRemove as $sport) {
+                    $sport = new SportArena($sport, $arena->getId());
+                    $this->sportArena->delete($sport); 
                 }
                 DB::commit();
             } catch (Exception $e) {

@@ -18,7 +18,6 @@ class SportArenaRepository implements Base
         try {
             $sports = DB::table('sport_arena', 'sa')
             ->join('sport as s', 'sa.sport_id', '=', 's.id')
-            ->select('sm.id', 's.name as sport_name', 'm.description as description')
             ->where('sa.arena_id', '=', $arena_id)
             ->select('s.*', 'sa.arena_id')
             ->get()
@@ -37,10 +36,10 @@ class SportArenaRepository implements Base
             throw new Exception($e->getMessage());
         }
     }
-    public function delete(Arena $arena)
+    public function delete(SportArena $sport_arena)
     {
         try {
-            DB::table('sport_arena', 'sa')->where('sa.arena_id', '=', $arena->getId())->delete();
+            DB::table('sport_arena', 'sa')->where('sa.arena_id', '=', $sport_arena->getArenaId())->where('sa.sport_id', '=', $sport_arena->getSportId())->delete();
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

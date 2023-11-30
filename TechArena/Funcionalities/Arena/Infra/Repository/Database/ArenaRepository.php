@@ -32,27 +32,16 @@ class ArenaRepository implements Base
                 ->first();
 
             $arena = new Arena($query->address, $query->lat, $query->longitude, $query->image, $query->is_league_only);
-
+            $arena->setId($query->id);
             return $arena;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
-    public function selectByFilters(array $filters): array
+    public function selectByFilters(string $lat, string $longitude): array
     {
         try {
             $query = DB::table('arena');
-
-            if (isset($filters['address'])) {
-                $query->where('address', 'LIKE', '%' . $filters['address'] . '%');
-                unset($filters['address']);
-            }
-
-            // Aplique os outros filtros
-            foreach ($filters as $key => $value) {
-                $query->where($key, $value);
-            }
-
             $arenas = $query->get()->all();
 
             return $arenas;
@@ -63,7 +52,7 @@ class ArenaRepository implements Base
     public function selectBySport(int $sport_id): array
     {
         try {
-            $arenas = DB::table('arena a')
+            $arenas = DB::table('arena as a')
                 ->join('sport_arena as sa', 'sa.arena_id', '=', 'a.id')
                 ->where('sport_id', '=', $sport_id)
                 ->get()

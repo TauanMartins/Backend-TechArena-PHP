@@ -29,7 +29,7 @@ class Appointments
         $this->userAppointmentChat = $userAppointmentChat;
         $this->userAppointment = $userAppointment;
     }
-    public function domain(Appointment $appointment)
+    public function domain(Appointment $appointment, bool $holder)
     {
 
         try {
@@ -37,7 +37,7 @@ class Appointments
             $chat = $this->chatInterface->create(true);
             $appointment->setChatId($chat->getId());
             $this->appointmentInterface->create($appointment);
-            $user_appointment = new UserAppointment($appointment->getId(), $appointment->getOrganizerId(), true);
+            $user_appointment = new UserAppointment($appointment->getId(), $appointment->getOrganizerId(), $holder);
             $this->userAppointment->create($user_appointment);
             $this->userAppointmentChat->domain(new UserChat($appointment->getChatId(), $appointment->getOrganizerId()), $user_appointment);
             DB::commit();

@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Appointments\AppointmentsCreateController;
 use App\Http\Controllers\Appointments\AppointmentsListAllController;
+use App\Http\Controllers\Appointments\UserAppointmentsListAllController;
+use App\Http\Controllers\Arena\ArenaListBySportController;
+use App\Http\Controllers\Horary\HoraryListAvailableController;
 use App\Http\Controllers\SportArena\SportArenaListAllController;
 use App\Http\Controllers\SportMaterial\SportMaterialListAllController;
 use App\Http\Controllers\User\UserAppointmentRequestController;
@@ -52,7 +55,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/health-check', StatusController::class);
 
+// Horary
+Route::get('/horary', HoraryListAvailableController::class);
+
 // Appointments
+Route::get('/appointments/user', UserAppointmentsListAllController::class);
 Route::get('/appointments', AppointmentsListAllController::class);
 Route::post('/appointments', AppointmentsCreateController::class);
 
@@ -87,7 +94,9 @@ Route::post('/chat/team', ChatTeamCreateController::class);
 Route::post('/chat/appointment', ChatAppointmentCreateController::class);
 
 // Arena
-Route::get('/arenas', ArenaListController::class);
+Route::get('/arenas', ArenaListAllController::class);
+Route::get('/arenas/sports', ArenaListBySportController::class);
+Route::get('/arenas/users', ArenaListController::class);
 Route::post('/arenas', ArenaCreateController::class);
 Route::put('/arenas', ArenaEditController::class);
 Route::get('/arenas/admin', ArenaListAllController::class);
@@ -99,10 +108,10 @@ Route::post('/users/team', UserTeamRequestController::class); // membro solicita
 Route::put('/users/team', UserTeamAcceptRequestController::class); // membro aceita solicitação
 Route::post('/users', UserAuthController::class);
 Route::post('/users/admin', UserAuthController::class);
+Route::post('/users/appointments', UserAppointmentRequestController::class);
 Route::get('/sports/prefered-sports', SportPreferedListAllController::class);
 Route::post('/sports/prefered-sports', SportPreferedCreateController::class);
 Route::put('/sports/prefered-sports', SportPreferedUpdateController::class);
-Route::post('/users/appointments', UserAppointmentRequestController::class);
 
 // Update theme preferences
 Route::put('/users/theme', UserPreferedThemeController::class);

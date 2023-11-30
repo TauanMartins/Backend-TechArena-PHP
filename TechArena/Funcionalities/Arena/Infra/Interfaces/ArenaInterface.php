@@ -7,7 +7,7 @@ use TechArena\Funcionalities\Arena\Infra\Model\Arena;
 interface ArenaInterface
 {
     public function selectAll(): array;
-    public function selectByFilters(array $filters): array;
+    public function selectByFilters(string $lat, string $longitude): array;
     public function selectBySport(int $sport_id): array;
     public function selectSpecificBySport(int $sport_id, int $arena_id): int;
     public function select(int $id): Arena;

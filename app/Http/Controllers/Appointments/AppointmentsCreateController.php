@@ -28,7 +28,7 @@ class AppointmentsCreateController extends Controller
             $user = $this->user->selectByUsername($request['username']);
             $sport_arena = $this->arena->selectSpecificBySport($request['sport_id'], $request['arena_id']);
             $appointment = new Appointment(DateTime::createFromFormat('Y-m-d', $request['date']), $sport_arena, $request['schedule_id'], $user->getId());
-            $this->appointment->domain($appointment);
+            $this->appointment->domain($appointment, $request['holder']);
             return response()->json([], 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);

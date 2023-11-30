@@ -4,6 +4,9 @@ namespace TechArena\Provider;
 
 use Illuminate\Support\ServiceProvider as Base;
 
+use TechArena\Funcionalities\Horary\Infra\Interfaces\HoraryInterface;
+use TechArena\Funcionalities\Horary\Infra\Repository\Database\HoraryRepository as HoraryRepositoryConcretely;
+
 use TechArena\Funcionalities\SportArena\Infra\Interfaces\SportArenaInterface;
 use TechArena\Funcionalities\SportArena\Infra\Repository\Database\SportArenaRepository as SportArenaRepositoryConcretely;
 
@@ -64,6 +67,7 @@ use TechArena\Funcionalities\User\Infra\Repository\Database\UserRepository as Us
 class ServiceProvider extends Base
 {
     public $bindings = [
+        HoraryInterface::class => HoraryRepositoryConcretely::class,
         SportArenaInterface::class => SportArenaRepositoryConcretely::class,
         UserAppointmentInterface::class => UserAppointmentRepositoryConcretely::class,
         AppointmentInterface::class => AppointmentRepositoryConcretely::class,

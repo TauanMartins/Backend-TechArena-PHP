@@ -9,7 +9,7 @@ interface SportArenaInterface
 {
     public function select(int $arena_id): array;
     public function create(SportArena $sport_arena);
-    public function delete(Arena $arena);
+    public function delete(SportArena $sport_arena);
     public function exist(Arena $arena, int $sport_id);
 
 }
