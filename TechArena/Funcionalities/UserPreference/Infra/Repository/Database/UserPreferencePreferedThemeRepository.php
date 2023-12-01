@@ -51,9 +51,9 @@ class UserPreferencePreferedThemeRepository implements Base
     public function update(UserPreference $userPreference)
     {
         DB::table("user_preference", 'up')
-            ->where(['user_id' => $userPreference->getIdUser()])
+            ->where('user_id', '=', $userPreference->getIdUser())
+            ->where('preference_id', '=', $userPreference->getIdPreference())
             ->update([
-                'preference_id' => $userPreference->getIdPreference(),
                 'value' => $userPreference->getValue(),
             ]);
     }
