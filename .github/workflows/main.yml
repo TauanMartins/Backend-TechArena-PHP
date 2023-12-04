@@ -86,7 +86,7 @@ jobs:
         script: |
           docker load -i /tmp/backend.tar
           rm /tmp/backend.tar
-    - name: SSH into remote server and start Docker container
+    - name: SSH into remote 1 server and start Docker container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -96,7 +96,7 @@ jobs:
           docker rm -f backend || true
           docker run -d --name backend -p 8000:8000 backend 
           docker image prune -af
-    - name: SSH into remote server and load WebSocket Docker image
+    - name: SSH into remote 1 server and load WebSocket Docker image
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -105,10 +105,86 @@ jobs:
         script: |
           docker load -i /tmp/websocket.tar
           rm /tmp/websocket.tar
-    - name: SSH into remote server and start WebSocket Docker container
+    - name: SSH into remote 1 server and start WebSocket Docker container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f websocket || true
+          docker run -d --name websocket -p 6001:6001 websocket
+          docker image prune -af
+    - name: SSH into remote 2 server and load Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/backend.tar
+          rm /tmp/backend.tar
+    - name: SSH into remote 2 server and start Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f backend || true
+          docker run -d --name backend -p 8000:8000 backend 
+          docker image prune -af
+    - name: SSH into remote 2 server and load WebSocket Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/websocket.tar
+          rm /tmp/websocket.tar
+    - name: SSH into remote 2 server and start WebSocket Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f websocket || true
+          docker run -d --name websocket -p 6001:6001 websocket
+          docker image prune -af
+    - name: SSH into remote 3 server and load Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/backend.tar
+          rm /tmp/backend.tar
+    - name: SSH into remote 3 server and start Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f backend || true
+          docker run -d --name backend -p 8000:8000 backend 
+          docker image prune -af
+    - name: SSH into remote 3 server and load WebSocket Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/websocket.tar
+          rm /tmp/websocket.tar
+    - name: SSH into remote 3 server and start WebSocket Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
