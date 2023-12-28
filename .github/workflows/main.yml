@@ -23,18 +23,86 @@ jobs:
         sed -i 's/^DB_DATABASE=.*/DB_DATABASE=${{ secrets.DB_DATABASE }}/g' .env
         sed -i 's/^DB_USERNAME=.*/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
         sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD="${{ secrets.DB_PASSWORD }}"/g' .env
+        sed -i 's/^BROADCAST_DRIVER=.*/BROADCAST_DRIVER="${{ secrets.BROADCAST_DRIVER }}"/g' .env
+        sed -i 's/^PUSHER_APP_ID=.*/PUSHER_APP_ID="${{ secrets.PUSHER_APP_ID }}"/g' .env
+        sed -i 's/^PUSHER_APP_KEY=.*/PUSHER_APP_KEY="${{ secrets.PUSHER_APP_KEY }}"/g' .env
+        sed -i 's/^PUSHER_APP_SECRET=.*/PUSHER_APP_SECRET="${{ secrets.PUSHER_APP_SECRET }}"/g' .env
+        sed -i 's/^PUSHER_SCHEME=.*/PUSHER_SCHEME="${{ secrets.PUSHER_SCHEME }}"/g' .env
+        sed -i 's/^PUSHER_HOST=.*/PUSHER_HOST="${{ secrets.PUSHER_HOST }}"/g' .env
+        sed -i 's/^PUSHER_PORT=.*/PUSHER_PORT="${{ secrets.PUSHER_PORT }}"/g' .env
+        sed -i 's/^AWS_ACCESS_KEY_ID=.*/AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"/g' .env
+        sed -i 's|^AWS_SECRET_ACCESS_KEY=.*|AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"|g' .env
+        sed -i 's/^AWS_DEFAULT_REGION=.*/AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}"/g' .env
+        sed -i 's/^AWS_BUCKET_NAME=.*/AWS_BUCKET_NAME="${{ secrets.AWS_BUCKET_NAME }}"/g' .env
     - name: Build the Docker image
       run: |
-        docker build -t backend .
+        docker build -f ./.devops/php/Dockerfile -t backend .
     - name: Save Docker image to file
       run: docker save backend -o backend.tar
-    - name: Copy Docker image to remote server
+    - name: Copy Docker image to remote 1 server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         source: backend.tar
+        target: /tmp
+    - name: Copy Docker image to remote 2 server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: backend.tar
+        target: /tmp
+    - name: Copy Docker image to remote 3 server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: backend.tar
+        target: /tmp
+    - name: Prepare .env file for WebSocket
+      run: |
+        cp .env.example .env
+        sed -i 's/^BROADCAST_DRIVER=.*/BROADCAST_DRIVER="${{ secrets.BROADCAST_DRIVER }}"/g' .env
+        sed -i 's/^PUSHER_APP_ID=.*/PUSHER_APP_ID="${{ secrets.PUSHER_APP_ID }}"/g' .env
+        sed -i 's/^PUSHER_APP_KEY=.*/PUSHER_APP_KEY="${{ secrets.PUSHER_APP_KEY }}"/g' .env
+        sed -i 's/^PUSHER_APP_SECRET=.*/PUSHER_APP_SECRET="${{ secrets.PUSHER_APP_SECRET }}"/g' .env
+        sed -i 's/^PUSHER_HOST_SERVER=.*/PUSHER_HOST_SERVER="${{ secrets.PUSHER_HOST_SERVER }}"/g' .env
+        sed -i 's/^PUSHER_PORT_SERVER=.*/PUSHER_PORT_SERVER="${{ secrets.PUSHER_PORT_SERVER }}"/g' .env
+        sed -i 's/^PUSHER_PORT_SERVER=.*/PUSHER_PORT_SERVER="${{ secrets.PUSHER_PORT_SERVER }}"/g' .env
+        sed -i 's/^PUSHER_SCHEME_SERVER=.*/PUSHER_SCHEME_SERVER="${{ secrets.PUSHER_SCHEME_SERVER }}"/g' .env
+        # Adicione outras variáveis necessárias para o WebSocket aqui
+    - name: Build the WebSocket Docker image
+      run: |
+        docker build -f ./.devops/websocket/Dockerfile -t websocket .
+    - name: Save WebSocket Docker image to file
+      run: docker save websocket -o websocket.tar
+    - name: Copy WebSocket Docker image to remote 1 server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: websocket.tar
+        target: /tmp
+    - name: Copy WebSocket Docker image to remote 2 server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: websocket.tar
+        target: /tmp
+    - name: Copy WebSocket Docker image to remote 3 server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: websocket.tar
         target: /tmp
 
   deploy:
@@ -50,7 +118,7 @@ jobs:
         script: |
           docker load -i /tmp/backend.tar
           rm /tmp/backend.tar
-    - name: SSH into remote server and start Docker container
+    - name: SSH into remote 1 server and start Docker container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -59,4 +127,99 @@ jobs:
         script: |
           docker rm -f backend || true
           docker run -d --name backend -p 8000:8000 backend 
+          docker image prune -af
+    - name: SSH into remote 1 server and load WebSocket Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/websocket.tar
+          rm /tmp/websocket.tar
+    - name: SSH into remote 1 server and start WebSocket Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f websocket || true
+          docker run -d --name websocket -p 6001:6001 websocket
+          docker image prune -af
+    - name: SSH into remote 2 server and load Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/backend.tar
+          rm /tmp/backend.tar
+    - name: SSH into remote 2 server and start Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f backend || true
+          docker run -d --name backend -p 8000:8000 backend 
+          docker image prune -af
+    - name: SSH into remote 2 server and load WebSocket Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/websocket.tar
+          rm /tmp/websocket.tar
+    - name: SSH into remote 2 server and start WebSocket Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_2 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f websocket || true
+          docker run -d --name websocket -p 6001:6001 websocket
+          docker image prune -af
+    - name: SSH into remote 3 server and load Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/backend.tar
+          rm /tmp/backend.tar
+    - name: SSH into remote 3 server and start Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f backend || true
+          docker run -d --name backend -p 8000:8000 backend 
+          docker image prune -af
+    - name: SSH into remote 3 server and load WebSocket Docker image
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker load -i /tmp/websocket.tar
+          rm /tmp/websocket.tar
+    - name: SSH into remote 3 server and start WebSocket Docker container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_3 }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          docker rm -f websocket || true
+          docker run -d --name websocket -p 6001:6001 websocket
           docker image prune -af
